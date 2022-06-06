@@ -20,6 +20,15 @@ public class WeaponHolder : MonoBehaviour {
 	public GameObject pickupHolder;
 	public Text weaponNamePickupText;
 
+	public Text grenadeAmmountText;
+
+	[Header("Other values")]
+	// Other info
+	public int grenadeAmount = 0;
+	public float throwForce = 40f;
+	public GameObject grenadePrefab;
+	public Transform grenadeThrowPos;
+
 	// weapon index
 	public int selectedWeapon = 0;
 
@@ -29,6 +38,18 @@ public class WeaponHolder : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		//defaultPos = transform;
+
+		if (grenadeAmount == 0) {
+			Color color = grenadeAmmountText.color;
+			color.a = 0.5f;
+			grenadeAmmountText.color = color;
+		} else {
+			Color color = grenadeAmmountText.color;
+			color.a = 1f;
+			grenadeAmmountText.color = color;
+		}
+
+		grenadeAmmountText.text = grenadeAmount.ToString ();
 
 		// Set the weapon before start
 		SelectWeapon ();
@@ -42,34 +63,60 @@ public class WeaponHolder : MonoBehaviour {
 		// Check for weapon on the ground
 		RaycastHit hit;
 		if (Physics.Raycast (transform.position, -transform.right, out hit, 10f, weaponMask)) {
-			pickupHolder.SetActive (true); // Set the ui
-			weaponNamePickupText.text = hit.transform.GetComponent<Gun> ().weaponName;
-			if (Input.GetKeyDown (KeyCode.F)) {
-				// Set the transform to a varible
-				Transform pickTrans = hit.transform;
+			if (hit.transform.GetComponent<Gun> () != null) {
+				pickupHolder.SetActive (true); // Set the ui
+				weaponNamePickupText.text = hit.transform.GetComponent<Gun> ().weaponName;
+				if (Input.GetKeyDown (KeyCode.F)) {
+					// Set the transform to a varible
+					Transform pickTrans = hit.transform;
 
-				// Turn on kinematic for the pickup weapon on the rigidbody
-				pickTrans.GetComponent<Rigidbody> ().isKinematic = true;
-				pickTrans.position = currentWeapon.position; // Set the position
-				pickTrans.rotation = currentWeapon.rotation; // Set the rotation
-				pickTrans.SetParent (transform); // Set the parent to the weapon holder
-				currentWeapon.parent = null; // Detach the current weapon from the holder
-				currentWeapon.GetComponent<Rigidbody> ().isKinematic = false; // Turn of kinematic for the current weapon
-				pickTrans.GetComponent<Gun> ().enabled = true; // Turn on the weapon script for the pickup weapon
-				currentWeapon.GetComponent<Gun> ().enabled = false; // Turn off the current weapon script
+					// Turn on kinematic for the pickup weapon on the rigidbody
+					pickTrans.GetComponent<Rigidbody> ().isKinematic = true;
+					pickTrans.position = currentWeapon.position; // Set the position
+					pickTrans.rotation = currentWeapon.rotation; // Set the rotation
+					pickTrans.SetParent (transform); // Set the parent to the weapon holder
+					currentWeapon.parent = null; // Detach the current weapon from the holder
+					currentWeapon.GetComponent<Rigidbody> ().isKinematic = false; // Turn of kinematic for the current weapon
+					pickTrans.GetComponent<Gun> ().enabled = true; // Turn on the weapon script for the pickup weapon
+					currentWeapon.GetComponent<Gun> ().enabled = false; // Turn off the current weapon script
 
-				weaponIcon.sprite = pickTrans.GetComponent<Gun> ().gunImage; // Set the icon
-				currentAmmoText.text = pickTrans.GetComponent<Gun> ().currentAmmo.ToString (); // Set the ammo
-				invetoryAmmoText.text = pickTrans.GetComponent<Gun>().inventoryAmmo.ToString();
+					weaponIcon.sprite = pickTrans.GetComponent<Gun> ().gunImage; // Set the icon
+					currentAmmoText.text = pickTrans.GetComponent<Gun> ().currentAmmo.ToString (); // Set the ammo
+					invetoryAmmoText.text = pickTrans.GetComponent<Gun> ().inventoryAmmo.ToString ();
 
-				currentWeapon = pickTrans; // Set the current weapon
+					currentWeapon = pickTrans; // Set the current weapon
+				}
 			}
+
+			if (hit.transform.GetComponent<Grenade> () != null) {
+				pickupHolder.SetActive (true);
+				weaponNamePickupText.text = "Grenade";
+				if (Input.GetKeyDown (KeyCode.F)) {
+					grenadeAmount++;
+					grenadeAmmountText.text = grenadeAmount.ToString ();
+
+					if (grenadeAmount == 0) {
+						Color color = grenadeAmmountText.color;
+						color.a = 0.5f;
+						grenadeAmmountText.color = color;
+					} else {
+						Color color = grenadeAmmountText.color;
+						color.a = 1f;
+						grenadeAmmountText.color = color;
+					}
+
+					Destroy (hit.transform.gameObject);
+				}
+			}
+
 		} else {
 			pickupHolder.SetActive (false); // Turn off the pickup icon if the ray didn't hit a weapon
 		}
 
 		isAiming = Input.GetButton ("Fire2");
+
 		Aim ();
+		ThrowGrenade ();
 
 		if (Input.GetAxis ("Mouse ScrollWheel") > 0f) {
 			if (selectedWeapon <= 0)
@@ -103,6 +150,32 @@ public class WeaponHolder : MonoBehaviour {
 			weaponIcon.sprite = defaultImage;
 			currentAmmoText.text = "--";
 			invetoryAmmoText.text = "--";
+		}
+	}
+
+	void ThrowGrenade(){
+		if (Input.GetKeyDown (KeyCode.G) && grenadeAmount > 0) {
+
+			int defaultLayer = LayerMask.NameToLayer ("Default");
+
+			GameObject grenade = Instantiate (grenadePrefab, grenadeThrowPos.position, Quaternion.identity);
+			grenade.layer = defaultLayer;
+			grenade.transform.parent = null;
+			Rigidbody rb = grenade.GetComponent<Rigidbody> ();
+			grenade.GetComponent<Grenade> ().isThrown = true;
+			rb.AddForce (grenadeThrowPos.forward * throwForce, ForceMode.VelocityChange);
+			grenadeAmount--;
+			grenadeAmmountText.text = grenadeAmount.ToString ();
+
+			if (grenadeAmount == 0) {
+				Color color = grenadeAmmountText.color;
+				color.a = 0.5f;
+				grenadeAmmountText.color = color;
+			} else {
+				Color color = grenadeAmmountText.color;
+				color.a = 1f;
+				grenadeAmmountText.color = color;
+			}
 		}
 	}
 

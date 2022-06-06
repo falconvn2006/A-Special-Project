@@ -48,7 +48,6 @@ public class Gun : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
 		if (isReloading) {
 			transform.Rotate (0, 0, Time.deltaTime * 300, Space.Self);
 			return;
@@ -59,12 +58,25 @@ public class Gun : MonoBehaviour {
 			Shoot ();
 		}
 
-		if (Input.GetKeyDown (KeyCode.R) && currentAmmo < magazine) {
+		if (Input.GetKeyDown (KeyCode.R) && currentAmmo < magazine && inventoryAmmo > 0f) {
 			StartCoroutine( Reload ());
 		}
 	}
 
 	void Shoot(){
+		if (currentAmmo <= 0 && inventoryAmmo > 0f) {
+			StartCoroutine( Reload ());
+			return;
+		}
+
+		if (inventoryAmmo <= 0)
+			inventoryAmmoText.color = Color.red;
+
+		if (currentAmmo <= 0) {
+			currentAmmoText.color = Color.red;
+			return;
+		}
+
 		Ray ray = fpsCam.ViewportPointToRay (new Vector3 (0.5f, 0.5f, 0));
 		RaycastHit _hit;
 
@@ -75,11 +87,6 @@ public class Gun : MonoBehaviour {
 			targetPoint = ray.GetPoint(75);
 
 		Vector3 directionWithoutSpread = targetPoint - gunPoint.position;
-
-		if (currentAmmo <= 0) {
-			StartCoroutine( Reload ());
-			return;
-		}
 
 		GameObject bullet = Instantiate (bulletPrefab, gunPoint.position, Quaternion.identity);
 		bullet.transform.forward = directionWithoutSpread.normalized;
@@ -98,10 +105,16 @@ public class Gun : MonoBehaviour {
 
 		yield return new WaitForSeconds (reloadTime);
 
-		currentAmmo = magazine;
-		inventoryAmmo -= ammoLost;
+		if (inventoryAmmo <= magazine) {
+			currentAmmo = inventoryAmmo;
+			inventoryAmmo = 0f;
+		} else {
+			currentAmmo = magazine;
+			inventoryAmmo -= ammoLost;
+		}
 		ammoLost = 0f;
 		currentAmmoText.text = currentAmmo.ToString();
+		currentAmmoText.color = Color.white;
 		inventoryAmmoText.text = inventoryAmmo.ToString ();
 
 		yield return new WaitForSeconds (0.2f);
