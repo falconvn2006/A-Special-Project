@@ -1,0 +1,32 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Bullet : MonoBehaviour {
+
+	public float speed = 10f;
+
+	private Rigidbody rb;
+	private float timer = 0f;
+
+	public Vector3 direction;
+
+	// Use this for initialization
+	void Start () {
+		rb = GetComponent<Rigidbody> ();
+
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		timer += Time.deltaTime;
+
+		if (timer >= 120f) {
+			Destroy (gameObject);
+		}
+	}
+
+	void OnCollisionEnter(Collision col){
+		Destroy (gameObject);
+	}
+}
