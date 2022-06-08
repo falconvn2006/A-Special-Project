@@ -8,6 +8,7 @@ public class Grenade : MonoBehaviour {
 	public int amount = 1;
 
 	[Header("Grenade Settings")]
+	public float damage = 200f;
 	public float delay = 3f;
 	public GameObject explosionEffect;
 	public float radius = 5f;
@@ -34,6 +35,9 @@ public class Grenade : MonoBehaviour {
 	}
 
 	void Explode(){
+		GameObject effect = Instantiate (explosionEffect, transform.position, Quaternion.identity);
+		effect.transform.parent = transform;
+
 		Collider[] colliders = Physics.OverlapSphere(transform.position, radius);
 
 		foreach(Collider col in colliders){
@@ -42,7 +46,7 @@ public class Grenade : MonoBehaviour {
 				rb.AddExplosionForce(force, transform.position, radius);
 			}
 		}
-
-		Destroy(gameObject);
+			
+		Destroy(gameObject, 0.5f);
 	}
 }

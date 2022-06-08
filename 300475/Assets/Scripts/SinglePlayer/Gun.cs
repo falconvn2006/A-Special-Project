@@ -31,9 +31,11 @@ public class Gun : MonoBehaviour {
 	public Sprite gunImage;
 
 	void Awake(){
+		/*
 		currentAmmoText.text = currentAmmo.ToString();
 		inventoryAmmoText.text = inventoryAmmo.ToString ();
 		gunIcon.sprite = gunImage;
+		*/
 	}
 
 	// Use this for initialization

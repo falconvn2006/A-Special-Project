@@ -14,11 +14,16 @@ public class WeaponHolder : MonoBehaviour {
 
 	[Header("UI")]
 	public Image weaponIcon;
+	public Image pickUpWeaponIcon;
+
 	public Sprite defaultImage;
 	public Text currentAmmoText;
 	public Text invetoryAmmoText;
 	public GameObject pickupHolder;
 	public Text weaponNamePickupText;
+
+	// Image
+	public Sprite grenadeIcon;
 
 	public Text grenadeAmmountText;
 
@@ -66,17 +71,21 @@ public class WeaponHolder : MonoBehaviour {
 			if (hit.transform.GetComponent<Gun> () != null) {
 				pickupHolder.SetActive (true); // Set the ui
 				weaponNamePickupText.text = hit.transform.GetComponent<Gun> ().weaponName;
+				pickUpWeaponIcon.sprite = hit.transform.GetComponent<Gun> ().gunImage;
+
 				if (Input.GetKeyDown (KeyCode.F)) {
 					// Set the transform to a varible
 					Transform pickTrans = hit.transform;
+					Vector3 pickPos = hit.transform.position;
 
 					// Turn on kinematic for the pickup weapon on the rigidbody
 					pickTrans.GetComponent<Rigidbody> ().isKinematic = true;
+					pickTrans.SetParent (transform); // Set the parent to the weapon holder
 					pickTrans.position = currentWeapon.position; // Set the position
 					pickTrans.rotation = currentWeapon.rotation; // Set the rotation
-					pickTrans.SetParent (transform); // Set the parent to the weapon holder
 					currentWeapon.parent = null; // Detach the current weapon from the holder
 					currentWeapon.GetComponent<Rigidbody> ().isKinematic = false; // Turn of kinematic for the current weapon
+					currentWeapon.position = pickPos;
 					pickTrans.GetComponent<Gun> ().enabled = true; // Turn on the weapon script for the pickup weapon
 					currentWeapon.GetComponent<Gun> ().enabled = false; // Turn off the current weapon script
 
@@ -91,6 +100,8 @@ public class WeaponHolder : MonoBehaviour {
 			if (hit.transform.GetComponent<Grenade> () != null) {
 				pickupHolder.SetActive (true);
 				weaponNamePickupText.text = "Grenade";
+				pickUpWeaponIcon.sprite = grenadeIcon;
+
 				if (Input.GetKeyDown (KeyCode.F)) {
 					grenadeAmount++;
 					grenadeAmmountText.text = grenadeAmount.ToString ();
