@@ -83,11 +83,13 @@ public class WeaponHolder : MonoBehaviour {
 
 					// Turn on kinematic for the pickup weapon on the rigidbody
 					pickTrans.GetComponent<Rigidbody> ().isKinematic = true;
+					pickTrans.GetComponent<Collider> ().isTrigger = true; // Turn on trigger for the pickup weapon collider
 					pickTrans.SetParent (transform); // Set the parent to the weapon holder
 					pickTrans.position = currentWeapon.position; // Set the position
 					pickTrans.rotation = currentWeapon.rotation; // Set the rotation
 					currentWeapon.parent = null; // Detach the current weapon from the holder
-					currentWeapon.GetComponent<Rigidbody> ().isKinematic = false; // Turn of kinematic for the current weapon
+					currentWeapon.GetComponent<Rigidbody> ().isKinematic = false; // Turn off kinematic for the current weapon
+					currentWeapon.GetComponent<Collider>().isTrigger = false; // Turn off trigger for the current weapon collider
 					currentWeapon.position = pickPos;
 					pickTrans.GetComponent<Gun> ().enabled = true; // Turn on the weapon script for the pickup weapon
 					currentWeapon.GetComponent<Gun> ().enabled = false; // Turn off the current weapon script
