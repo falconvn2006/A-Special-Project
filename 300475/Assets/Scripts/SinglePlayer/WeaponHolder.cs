@@ -6,15 +6,18 @@ using UnityEngine.UI;
 public class WeaponHolder : MonoBehaviour {
 
 	public LayerMask weaponMask;
+	public Transform cameraTrans;
 
 	[Header("Aim Down Sight")]
 	public Vector3 aimDownSightPos;
 	private Vector3 defaultPos = new Vector3(0.15f, -0.1159999f, 0.266f);
 	public bool isAiming;
+	public GameObject crossHair;
 
 	[Header("UI")]
 	public Image weaponIcon;
 	public Image pickUpWeaponIcon;
+	public Image pickUpGrenadeIcon;
 
 	public Sprite defaultImage;
 	public Text currentAmmoText;
@@ -67,7 +70,7 @@ public class WeaponHolder : MonoBehaviour {
 
 		// Check for weapon on the ground
 		RaycastHit hit;
-		if (Physics.Raycast (transform.position, -transform.right, out hit, 10f, weaponMask)) {
+		if (Physics.Raycast (cameraTrans.position, -transform.right, out hit, 10f, weaponMask)) {
 			if (hit.transform.GetComponent<Gun> () != null) {
 				pickupHolder.SetActive (true); // Set the ui
 				weaponNamePickupText.text = hit.transform.GetComponent<Gun> ().weaponName;
@@ -100,7 +103,10 @@ public class WeaponHolder : MonoBehaviour {
 			if (hit.transform.GetComponent<Grenade> () != null) {
 				pickupHolder.SetActive (true);
 				weaponNamePickupText.text = "Grenade";
+
+				pickUpWeaponIcon.gameObject.SetActive (false);
 				pickUpWeaponIcon.sprite = grenadeIcon;
+				pickUpGrenadeIcon.gameObject.SetActive (true);
 
 				if (Input.GetKeyDown (KeyCode.F)) {
 					grenadeAmount++;
@@ -122,6 +128,8 @@ public class WeaponHolder : MonoBehaviour {
 
 		} else {
 			pickupHolder.SetActive (false); // Turn off the pickup icon if the ray didn't hit a weapon
+			pickUpWeaponIcon.gameObject.SetActive(true);
+			pickUpGrenadeIcon.gameObject.SetActive (false);
 		}
 
 		isAiming = Input.GetButton ("Fire2");
@@ -150,12 +158,15 @@ public class WeaponHolder : MonoBehaviour {
 	}
 
 	void Aim(){
-		if (isAiming)
+		if (isAiming) {
 			//transform.position = Vector3.Lerp (transform.position, aimDownSightPos, Time.deltaTime * 2);
 			transform.localPosition = aimDownSightPos;
-		else
+			crossHair.SetActive (false);
+		} else {
 			//transform.position = Vector3.Lerp (aimDownSightPos, defaultPos.position, Time.deltaTime * 2);
 			transform.localPosition = defaultPos;
+			crossHair.SetActive (true);
+		}
 
 		if (transform.childCount <= 0){
 			weaponIcon.sprite = defaultImage;
@@ -201,12 +212,28 @@ public class WeaponHolder : MonoBehaviour {
 				currentAmmoText.text = weapon.GetComponent<Gun> ().currentAmmo.ToString();
 				invetoryAmmoText.text = weapon.GetComponent<Gun> ().inventoryAmmo.ToString ();
 
+				RenewText (weapon.GetComponent<Gun> ());
+
 				currentWeapon = weapon;
 			} else {
 				weapon.gameObject.SetActive (false);
 				weapon.GetComponent<Gun> ().enabled = false;
 			}
 			i++;
+		}
+	}
+
+	void RenewText(Gun gun){
+		if (gun.currentAmmo <= 0) {
+			currentAmmoText.color = Color.red;
+		} else {
+			currentAmmoText.color = Color.white;
+		}
+
+		if (gun.inventoryAmmo <= 0) {
+			invetoryAmmoText.color = Color.red;
+		} else {
+			invetoryAmmoText.color = Color.white;
 		}
 	}
 }
