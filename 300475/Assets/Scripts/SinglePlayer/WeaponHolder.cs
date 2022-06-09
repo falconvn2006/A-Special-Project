@@ -160,7 +160,7 @@ public class WeaponHolder : MonoBehaviour {
 	}
 
 	void Aim(){
-		if (isAiming) {
+		if (isAiming && !currentWeapon.GetComponent<Gun>().isReloading) {
 			//transform.position = Vector3.Lerp (transform.position, aimDownSightPos, Time.deltaTime * 2);
 			transform.localPosition = aimDownSightPos;
 			crossHair.SetActive (false);

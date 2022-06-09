@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour {
 
+	public GameObject impactEffect;
+
 	public float speed = 10f;
 
 	private Rigidbody rb;
@@ -27,6 +29,10 @@ public class Bullet : MonoBehaviour {
 	}
 
 	void OnCollisionEnter(Collision col){
-		Destroy (gameObject);
+		GameObject effect = Instantiate (impactEffect, transform.position, Quaternion.LookRotation(transform.forward));
+
+		effect.transform.parent = transform;
+
+		Destroy (gameObject, 1f);
 	}
 }

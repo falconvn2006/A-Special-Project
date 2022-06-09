@@ -91,6 +91,7 @@ public class Gun : MonoBehaviour {
 		Vector3 directionWithoutSpread = targetPoint - gunPoint.position;
 
 		GameObject bullet = Instantiate (bulletPrefab, gunPoint.position, Quaternion.identity);
+		bullet.transform.localEulerAngles = new Vector3 (90f, 0f, FindObjectOfType<Movement> ().transform.localEulerAngles.y);
 		bullet.transform.forward = directionWithoutSpread.normalized;
 		bullet.GetComponent<Rigidbody> ().AddForce (directionWithoutSpread.normalized * 50, ForceMode.Impulse);
 		bullet.GetComponent<Rigidbody> ().AddForce (fpsCam.transform.up * 5, ForceMode.Impulse);
