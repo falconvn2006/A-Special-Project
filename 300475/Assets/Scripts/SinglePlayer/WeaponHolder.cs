@@ -161,12 +161,16 @@ public class WeaponHolder : MonoBehaviour {
 
 	void Aim(){
 		if (isAiming && !currentWeapon.GetComponent<Gun>().isReloading) {
-			//transform.position = Vector3.Lerp (transform.position, aimDownSightPos, Time.deltaTime * 2);
-			transform.localPosition = aimDownSightPos;
+			if(transform.localPosition != aimDownSightPos)
+				transform.localPosition = Vector3.Lerp (transform.localPosition, aimDownSightPos, Time.deltaTime * 10f);
+
+			//transform.localPosition = aimDownSightPos;
 			crossHair.SetActive (false);
 		} else {
-			//transform.position = Vector3.Lerp (aimDownSightPos, defaultPos.position, Time.deltaTime * 2);
-			transform.localPosition = defaultPos;
+			if(transform.localPosition != defaultPos)
+				transform.localPosition = Vector3.Lerp (transform.localPosition, defaultPos, Time.deltaTime * 10f);
+
+			//transform.localPosition = defaultPos;
 			crossHair.SetActive (true);
 		}
 

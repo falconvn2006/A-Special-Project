@@ -31,8 +31,8 @@ public class Bullet : MonoBehaviour {
 	void OnCollisionEnter(Collision col){
 		GameObject effect = Instantiate (impactEffect, transform.position, Quaternion.LookRotation(transform.forward));
 
-		effect.transform.parent = transform;
+		Destroy(effect, 1f);
 
-		Destroy (gameObject, 1f);
+		Destroy (gameObject, 1.5f);
 	}
 }

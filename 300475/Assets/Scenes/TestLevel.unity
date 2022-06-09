@@ -3380,7 +3380,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1021726196}
   m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -0.618, y: 0.033, z: -0}
+  m_LocalPosition: {x: -0.559, y: 0.033, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 21677832}
@@ -6693,7 +6693,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2030495678}
   - component: {fileID: 2030495677}
-  - component: {fileID: 2030495676}
   - component: {fileID: 2030495675}
   - component: {fileID: 2030495674}
   - component: {fileID: 2030495679}
@@ -6713,14 +6712,6 @@ AudioListener:
   m_GameObject: {fileID: 2030495673}
   m_Enabled: 1
 --- !u!124 &2030495675
-Behaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2030495673}
-  m_Enabled: 1
---- !u!92 &2030495676
 Behaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
