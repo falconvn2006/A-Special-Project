@@ -9,6 +9,8 @@ public class WeaponHolder : MonoBehaviour {
 	public Transform cameraTrans;
 
 	[Header("Aim Down Sight")]
+	public Camera mainCam;
+	public float aimFOV = 30f;
 	public Vector3 aimDownSightPos;
 	private Vector3 defaultPos = new Vector3(0.15f, -0.1159999f, 0.266f);
 	public bool isAiming;
@@ -43,9 +45,12 @@ public class WeaponHolder : MonoBehaviour {
 	// transform of the current weapon
 	private Transform currentWeapon;
 
+	private float defaultFOV;
+
 	// Use this for initialization
 	void Start () {
 		//defaultPos = transform;
+		defaultFOV = mainCam.fieldOfView;
 
 		if (grenadeAmount == 0) {
 			Color color = grenadeAmmountText.color;
@@ -81,6 +86,10 @@ public class WeaponHolder : MonoBehaviour {
 					Transform pickTrans = hit.transform;
 					Vector3 pickPos = hit.transform.position;
 
+					// Get the layer
+					int picklayer = pickTrans.gameObject.layer;
+					int currentlayer = currentWeapon.gameObject.layer;
+
 					// Turn on kinematic for the pickup weapon on the rigidbody
 					pickTrans.GetComponent<Rigidbody> ().isKinematic = true;
 					pickTrans.GetComponent<Collider> ().isTrigger = true; // Turn on trigger for the pickup weapon collider
@@ -93,6 +102,9 @@ public class WeaponHolder : MonoBehaviour {
 					currentWeapon.position = pickPos;
 					pickTrans.GetComponent<Gun> ().enabled = true; // Turn on the weapon script for the pickup weapon
 					currentWeapon.GetComponent<Gun> ().enabled = false; // Turn off the current weapon script
+
+					pickTrans.gameObject.layer = currentlayer; // Set the layer
+					currentWeapon.gameObject.layer = picklayer; // Set the layer
 
 					weaponIcon.sprite = pickTrans.GetComponent<Gun> ().gunImage; // Set the icon
 					currentAmmoText.text = pickTrans.GetComponent<Gun> ().currentAmmo.ToString (); // Set the ammo
@@ -165,10 +177,18 @@ public class WeaponHolder : MonoBehaviour {
 				transform.localPosition = Vector3.Lerp (transform.localPosition, aimDownSightPos, Time.deltaTime * 10f);
 
 			//transform.localPosition = aimDownSightPos;
+			if(mainCam.fieldOfView != aimFOV)
+				//mainCam.fieldOfView = Mathf.Lerp (mainCam.fieldOfView, aimFOV, Time.deltaTime * 10f);
+				mainCam.fieldOfView = aimFOV;
+
 			crossHair.SetActive (false);
 		} else {
 			if(transform.localPosition != defaultPos)
 				transform.localPosition = Vector3.Lerp (transform.localPosition, defaultPos, Time.deltaTime * 10f);
+
+			if(mainCam.fieldOfView != defaultFOV)
+				//mainCam.fieldOfView = Mathf.Lerp (mainCam.fieldOfView, defaultFOV, Time.deltaTime * 10f);
+				mainCam.fieldOfView = defaultFOV;
 
 			//transform.localPosition = defaultPos;
 			crossHair.SetActive (true);

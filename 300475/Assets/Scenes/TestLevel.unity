@@ -181,7 +181,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 100000, guid: f344c3a0f9a8937478625f75b21d39ca, type: 3}
       propertyPath: m_Layer
-      value: 11
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: f344c3a0f9a8937478625f75b21d39ca, type: 3}
       propertyPath: m_IsActive
@@ -273,6 +273,16 @@ MonoBehaviour:
   inventoryAmmoText: {fileID: 1556496689}
   gunIcon: {fileID: 501711882}
   gunImage: {fileID: 21300000, guid: 57dbdbfcd74917a41aea5fe4d7f40c10, type: 3}
+  useInvoke: 1
+  spread: 0.3
+  bulletPerTap: 2
+  allowHoldDown: 1
+  shootForce: 500
+  upwardForce: 0
+  muzzleFlash: {fileID: 0}
+  allowInvoke: 1
+  readyToShoot: 0
+  timeBetweenShoot: 0.2
 --- !u!65 &21677835
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -663,7 +673,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 95960631}
-  m_Layer: 11
+  m_Layer: 10
   m_Name: GunPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -693,7 +703,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 100000, guid: fcb3cc25e154e224ca5fecc370d1117f, type: 3}
       propertyPath: m_Layer
-      value: 11
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: fcb3cc25e154e224ca5fecc370d1117f, type: 3}
       propertyPath: m_TagString
@@ -777,6 +787,16 @@ MonoBehaviour:
   inventoryAmmoText: {fileID: 1556496689}
   gunIcon: {fileID: 501711882}
   gunImage: {fileID: 21300000, guid: 806549eacb69038479ec82b766318f41, type: 3}
+  useInvoke: 1
+  spread: 1
+  bulletPerTap: 3
+  allowHoldDown: 0
+  shootForce: 500
+  upwardForce: 0
+  muzzleFlash: {fileID: 0}
+  allowInvoke: 1
+  readyToShoot: 0
+  timeBetweenShoot: 0
 --- !u!65 &157209315
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1250,7 +1270,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 292772761}
-  m_Layer: 11
+  m_Layer: 9
   m_Name: GunPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1546,6 +1566,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1144037919003224, guid: 9c7b9fcafec83434db8c7bf2f092a0d2, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 4318913527427444, guid: 9c7b9fcafec83434db8c7bf2f092a0d2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 186.49
@@ -2111,7 +2135,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 0645d33508121164cb36298c694282da, type: 3}
       propertyPath: m_Layer
-      value: 11
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 0645d33508121164cb36298c694282da, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2199,6 +2223,16 @@ MonoBehaviour:
   inventoryAmmoText: {fileID: 1556496689}
   gunIcon: {fileID: 501711882}
   gunImage: {fileID: 21300000, guid: 18a21f3fd98d13c438f106dc68175242, type: 3}
+  useInvoke: 1
+  spread: 0
+  bulletPerTap: 1
+  allowHoldDown: 0
+  shootForce: 500
+  upwardForce: 0
+  muzzleFlash: {fileID: 0}
+  allowInvoke: 1
+  readyToShoot: 0
+  timeBetweenShoot: 0
 --- !u!65 &532005650
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3108,7 +3142,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 2048
+    m_Bits: 512
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -3365,7 +3399,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1021726197}
-  m_Layer: 11
+  m_Layer: 9
   m_Name: Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4432,7 +4466,7 @@ GameObject:
   - component: {fileID: 1392885791}
   - component: {fileID: 1392885793}
   - component: {fileID: 1392885792}
-  m_Layer: 8
+  m_Layer: 11
   m_Name: Terrain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5315,8 +5349,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponMask:
     serializedVersion: 2
-    m_Bits: 2048
+    m_Bits: 1536
   cameraTrans: {fileID: 2030495678}
+  mainCam: {fileID: 2030495677}
+  aimFOV: 10
   aimDownSightPos: {x: 0, y: -0.07, z: 0}
   isAiming: 0
   crossHair: {fileID: 1089352735}
@@ -6320,11 +6356,11 @@ MonoBehaviour:
   groundCheck: {fileID: 1373314068}
   groundMask:
     serializedVersion: 2
-    m_Bits: 768
+    m_Bits: 2048
   vaultableWalls:
     serializedVersion: 2
-    m_Bits: 512
-  playerCam: {fileID: 0}
+    m_Bits: 0
+  playerCam: {fileID: 2030495677}
   headTransform: {fileID: 768732373}
 --- !u!143 &1952922843
 CharacterController:
@@ -6749,7 +6785,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294964223
+    m_Bits: 3383
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0

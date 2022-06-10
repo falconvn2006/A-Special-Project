@@ -157,7 +157,7 @@ public class Movement : MonoBehaviour {
 			vaultObj.SetActive (false);
 		}
 
-		if (Input.GetKey(KeyCode.LeftShift) && !FindObjectOfType<WeaponHolder>().isAiming && isGrounded && stamina > 0) {
+		if (Input.GetKey(KeyCode.LeftShift) && !FindObjectOfType<WeaponHolder>().isAiming && !FindObjectOfType<Gun>().isReloading && isGrounded && stamina > 0) {
 			if (Input.GetAxisRaw ("Vertical") > 0) {
 				staminaSlider.SetActive (true);
 				controller.Move (move * Time.deltaTime * sprintSpeed);

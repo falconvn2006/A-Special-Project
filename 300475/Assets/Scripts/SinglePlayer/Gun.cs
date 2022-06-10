@@ -11,7 +11,9 @@ public class Gun : MonoBehaviour {
 	public float magazine = 30f;
 	public float fireRate = 15f;
 	public float inventoryAmmo = 127f;
+
 	private float ammoLost = 0f;
+
 	[HideInInspector] public float currentAmmo;
 
 	public float reloadTime = 3f;
@@ -30,6 +32,20 @@ public class Gun : MonoBehaviour {
 	public Image gunIcon;
 	public Sprite gunImage;
 
+	[Header("Other Values")]
+	public bool useInvoke = false;
+
+	public float spread;
+	public float bulletPerTap;
+	public bool allowHoldDown;
+	public float shootForce, upwardForce;
+	bool isShooting;
+	public GameObject muzzleFlash;
+
+	public bool allowInvoke = true;
+	public bool readyToShoot;
+	public float timeBetweenShoot;
+
 	void Awake(){
 		/*
 		currentAmmoText.text = currentAmmo.ToString();
@@ -43,6 +59,8 @@ public class Gun : MonoBehaviour {
 		currentAmmo = magazine;
 		currentAmmoText.text = currentAmmo.ToString ();
 
+		readyToShoot = true;
+
 		if (bulletPrefab == null) {
 			Debug.LogError ("Missing Prefab");
 		}
@@ -55,8 +73,15 @@ public class Gun : MonoBehaviour {
 			return;
 		}
 
-		if (Input.GetButton ("Fire1") && Time.time >= nextTimeToFire) {
+		if(allowHoldDown) isShooting = Input.GetButton ("Fire1");
+		else isShooting = Input.GetButtonDown ("Fire1"); 
+
+		if (isShooting && !useInvoke && Time.time >= nextTimeToFire) {
 			nextTimeToFire = Time.time + 1f / fireRate;
+			Shoot ();
+		}
+
+		if(isShooting && readyToShoot && !isReloading && currentAmmo > 0 && useInvoke){
 			Shoot ();
 		}
 
@@ -79,6 +104,8 @@ public class Gun : MonoBehaviour {
 			return;
 		}
 
+		readyToShoot = false;
+
 		Ray ray = fpsCam.ViewportPointToRay (new Vector3 (0.5f, 0.5f, 0));
 		RaycastHit _hit;
 
@@ -90,15 +117,38 @@ public class Gun : MonoBehaviour {
 
 		Vector3 directionWithoutSpread = targetPoint - gunPoint.position;
 
+		float x = Random.Range (-spread, spread);
+		float y = Random.Range(-spread, spread);
+
+		Vector3 directionWithSpread = directionWithoutSpread + new Vector3 (x, y, 0);
+
 		GameObject bullet = Instantiate (bulletPrefab, gunPoint.position, Quaternion.identity);
-		bullet.transform.localEulerAngles = new Vector3 (90f, 0f, FindObjectOfType<Movement> ().transform.localEulerAngles.y);
-		bullet.transform.forward = directionWithoutSpread.normalized;
-		bullet.GetComponent<Rigidbody> ().AddForce (directionWithoutSpread.normalized * 50, ForceMode.Impulse);
-		bullet.GetComponent<Rigidbody> ().AddForce (fpsCam.transform.up * 5, ForceMode.Impulse);
+		// bullet.transform.localEulerAngles = new Vector3 (90f, 0f, FindObjectOfType<Movement> ().transform.localEulerAngles.y);
+		bullet.transform.forward = directionWithSpread.normalized;
+		bullet.GetComponent<Rigidbody> ().AddForce (directionWithSpread.normalized * shootForce, ForceMode.Impulse);
+		bullet.GetComponent<Rigidbody> ().AddForce (fpsCam.transform.up * upwardForce, ForceMode.Impulse);
+
+		if(muzzleFlash != null)
+			Instantiate(muzzleFlash, gunPoint.position, Quaternion.identity);
 
 		currentAmmo--;
 		ammoLost++;
 		currentAmmoText.text = currentAmmo.ToString();
+
+		//Reset shoot function (if not already invoked)
+		if(allowInvoke && useInvoke){
+			Invoke ("ResetShoot", timeBetweenShoot);
+			allowInvoke = false;
+		}
+
+		if(ammoLost < bulletPerTap && currentAmmo > 0 && useInvoke)
+			Invoke("Shoot", timeBetweenShoot);
+
+	}
+
+	void ResetShoot(){
+		readyToShoot = true;
+		allowInvoke = true;
 	}
 
 	IEnumerator Reload(){
@@ -115,7 +165,9 @@ public class Gun : MonoBehaviour {
 			currentAmmo = magazine;
 			inventoryAmmo -= ammoLost;
 		}
+
 		ammoLost = 0f;
+
 		currentAmmoText.text = currentAmmo.ToString();
 		currentAmmoText.color = Color.white;
 		inventoryAmmoText.text = inventoryAmmo.ToString ();
