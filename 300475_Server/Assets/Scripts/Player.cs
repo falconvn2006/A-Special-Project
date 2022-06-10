@@ -26,7 +26,7 @@ public class Player : MonoBehaviour
         id = _id;
         username = _username;
 
-        inputs = new bool[4];
+        inputs = new bool[5];
     }
 
     /// <summary>Processes player input and moves the player.</summary>
@@ -63,7 +63,7 @@ public class Player : MonoBehaviour
         if(controller.isGrounded)
         {
             yVelocity = 0;
-            if(inputs[1])
+            if(inputs[4])
             {
                 yVelocity = jumpSpeed;
             }

@@ -49,7 +49,7 @@ MonoBehaviour:
   username: 
   controller: {fileID: 8750990653779411363}
   gravity: -9.81
-  moveSpeed: 0.16666667
+  moveSpeed: 5
   jumpSpeed: 5
 --- !u!143 &8750990653779411363
 CharacterController:
