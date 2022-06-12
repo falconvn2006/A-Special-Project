@@ -6,6 +6,8 @@ using UnityEngine.UI;
 [RequireComponent(typeof(CharacterController))]
 public class Movement : MonoBehaviour {
 
+	public static Movement instance;
+
 	private CharacterController controller;
 
 	public float playerHeight;
@@ -19,6 +21,7 @@ public class Movement : MonoBehaviour {
 	public float sprintMultiplier = 2f;
 	public float sprintPovMul = 1.1f;
 	public float slideMultiplier = 4f;
+	public float crouchSpeedMultiplier = 0.5f;
 
 	[Header("Stamina Values")]
 	public float stamina = 100.0f;
@@ -41,16 +44,22 @@ public class Movement : MonoBehaviour {
 	public GameObject staminaSlider;
 
 	[Header("References In The Inspector")]
+	public GameObject graphicsObj;
 	public Transform groundCheck;
 	public LayerMask groundMask;
 	public LayerMask vaultableWalls;
 	public Camera playerCam;
 	public Transform headTransform;
+	public Transform crouchTrans;
 
 	Vector3 velocity;
+
 	bool isGrounded;
 	bool isSliding;
 	bool isVaultable;
+	bool isCrouching;
+
+	Transform defaultTrans;
 
 	// Hidden values
 	private float sprintSpeed;
@@ -59,22 +68,37 @@ public class Movement : MonoBehaviour {
 	private float sprintPov;
 	private float staminaTimer = 0.0f;
 	private Vector3 defaultTransform;
+	private float defaultSpeed;
+
+	Vector3 headPos;
+
+	void Awake(){
+		instance = this;
+	}
 
 	// Use this for initialization
 	void Start () {
+		// Set float values
+		defaultSpeed = speed;
 		sprintSpeed = speed * sprintMultiplier;
 		slideSpeed = speed * slideMultiplier;
-		controller = GetComponent<CharacterController>();
-		playerCam = GetComponentInChildren<Camera> ();
 		defaultPov = playerCam.fieldOfView;
 		sprintPov = defaultPov * sprintPovMul;
 		defaultTransform = transform.localScale;
+
+		controller = GetComponent<CharacterController>();
+		playerCam = GetComponentInChildren<Camera> ();
+		defaultTrans = transform;
+		headPos = headTransform.localPosition;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		// Check if is grounded by the ground mask
-		isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+		// isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+
+		isGrounded = controller.isGrounded; // Check if is grounded by the character controller
+
 		// Check if close to a wall
 		isVaultable = Physics.CheckSphere (transform.position, vaultDistance, vaultableWalls);
 
@@ -83,24 +107,32 @@ public class Movement : MonoBehaviour {
 		else
 			outOfStamObj.SetActive (false);
 
+		Crouch();
+
 		if (isSliding) {
-			// Set the height
-			Vector3 h = transform.localScale;
-			h.y *= 0.5f; // Downscale it
-			transform.localScale = h; // Set it
+
+			// // Set the height
+			// Vector3 h = transform.localScale;
+			// h.y *= 0.5f; // Downscale it
+			// transform.localScale = h; // Set it
+
+			Vector3 gfxh = graphicsObj.transform.localScale;
+			gfxh.y *= 0.5f; // Downscale it
+			headTransform.localPosition = crouchTrans.localPosition; // Set the position
 
 			// Move the player forward
 			controller.Move (slideForward * Time.deltaTime * slideSpeed);
 			slideTimer += Time.deltaTime; // Run the timer
 
 			// Check if timer reach max
-			if (slideTimer > slideTimerMax)
+			if (slideTimer > slideTimerMax){
 				isSliding = false;
+
+				headTransform.localPosition = headPos;
+				graphicsObj.transform.localScale = defaultTrans.localScale;
+			}
 			
 			return;
-		} else {
-			// Reset transform
-			transform.localScale = defaultTransform;
 		}
 
 		// Check for input to slide
@@ -122,40 +154,7 @@ public class Movement : MonoBehaviour {
 		// Calculate direction
 		Vector3 move = transform.right * x + transform.forward * z;
 
-		// if close to a vaultable wall
-		if (isVaultable) {
-			// Activate UI
-			vaultObj.SetActive (true);
-
-			// Check if key is pressed
-			if (Input.GetKeyDown (KeyCode.V)) {
-				Debug.Log ("Vaulting");
-				Vector3 dir = move.normalized;
-
-				// Head position
-				//Vector3 maxVaultPos = transform.position + Vector3.up * 1.5f; test code
-				Vector3 maxVaultPos = headTransform.position;
-
-				// Return if there is no place to vault
-				if (Physics.Raycast (maxVaultPos, dir, vaultDistance, groundMask))
-					return;
-
-				// Position of the landing
-				Vector3 hoverPos = maxVaultPos + dir * 2;
-			
-				// Raycast to find ground
-				RaycastHit hit;
-				if (!Physics.Raycast (hoverPos, Vector3.down, out hit, 3f, groundMask))
-					return;
-			
-				// Calculate the land pos
-				Vector3 landPos = hit.point + (Vector3.up * playerHeight * 0.5f);
-				transform.position = landPos;
-				Debug.Log ("Finish Vaulting");
-			}
-		} else {
-			vaultObj.SetActive (false);
-		}
+		Vault(move);
 
 		if (Input.GetKey(KeyCode.LeftShift) && !FindObjectOfType<WeaponHolder>().isAiming && !FindObjectOfType<Gun>().isReloading && isGrounded && stamina > 0) {
 			if (Input.GetAxisRaw ("Vertical") > 0) {
@@ -203,5 +202,59 @@ public class Movement : MonoBehaviour {
 	void OnDrawGizmosSelected(){
 		Gizmos.color = Color.red;
 		Gizmos.DrawRay (headTransform.position, headTransform.forward);
+	}
+
+	void Vault(Vector3 move){
+		// if close to a vaultable wall
+		if (isVaultable) {
+			// Activate UI
+			vaultObj.SetActive (true);
+
+			// Check if key is pressed
+			if (Input.GetKeyDown (KeyCode.V)) {
+				Debug.Log ("Vaulting");
+				Vector3 dir = move.normalized;
+
+				// Head position
+				//Vector3 maxVaultPos = transform.position + Vector3.up * 1.5f; test code
+				Vector3 maxVaultPos = headTransform.position;
+
+				// Return if there is no place to vault
+				if (Physics.Raycast (maxVaultPos, dir, vaultDistance, groundMask))
+					return;
+
+				// Position of the landing
+				Vector3 hoverPos = maxVaultPos + dir * 2;
+			
+				// Raycast to find ground
+				RaycastHit hit;
+				if (!Physics.Raycast (hoverPos, Vector3.down, out hit, 3f, groundMask))
+					return;
+			
+				// Calculate the land pos
+				Vector3 landPos = hit.point + (Vector3.up * playerHeight * 0.5f);
+				transform.position = landPos;
+				Debug.Log ("Finish Vaulting");
+			}
+		} else {
+			vaultObj.SetActive (false);
+		}
+	}
+
+	void Crouch(){
+		if(Input.GetKeyDown(KeyCode.C) && !isCrouching){
+			isCrouching = true;
+			Vector3 gfxh = graphicsObj.transform.localScale;
+			gfxh.y *= 0.5f; // Downscale it
+			headTransform.localPosition = crouchTrans.localPosition; // Set the position
+			speed *= crouchSpeedMultiplier;
+		}
+		else if(Input.GetKeyDown(KeyCode.C) && isCrouching){
+			isCrouching = false;
+
+			headTransform.localPosition = headPos;
+			graphicsObj.transform.localScale = defaultTrans.localScale;
+			speed = defaultSpeed;
+		}
 	}
 }

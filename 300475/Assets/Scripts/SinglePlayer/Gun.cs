@@ -5,6 +5,13 @@ using UnityEngine.UI;
 
 public class Gun : MonoBehaviour {
 
+	public enum GameModeType {
+		SinglePlayer,
+		Multiplayer
+	}
+
+	public GameModeType gameModeType;
+
 	public string weaponName;
 
 	public float damage = 10f;
@@ -57,7 +64,17 @@ public class Gun : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		currentAmmo = magazine;
-		currentAmmoText.text = currentAmmo.ToString ();
+		if(gameModeType == GameModeType.SinglePlayer)
+			currentAmmoText.text = currentAmmo.ToString ();
+
+		if(gameModeType == GameModeType.Multiplayer){
+			currentAmmoText = GameObject.Find ("CurrentAmmoText").GetComponent<Text> ();
+			inventoryAmmoText = GameObject.Find("InventoryAmmoText").GetComponent<Text>();
+			gunIcon = GameObject.Find ("WeaponIcon").GetComponent<Image> ();
+
+			currentAmmoText.text = currentAmmo.ToString ();
+			inventoryAmmoText.text = inventoryAmmo.ToString ();
+		}
 
 		readyToShoot = true;
 
@@ -127,6 +144,7 @@ public class Gun : MonoBehaviour {
 		bullet.transform.forward = directionWithSpread.normalized;
 		bullet.GetComponent<Rigidbody> ().AddForce (directionWithSpread.normalized * shootForce, ForceMode.Impulse);
 		bullet.GetComponent<Rigidbody> ().AddForce (fpsCam.transform.up * upwardForce, ForceMode.Impulse);
+		ClientSend.PlayerShoot(directionWithSpread.normalized);
 
 		if(muzzleFlash != null)
 			Instantiate(muzzleFlash, gunPoint.position, Quaternion.identity);
@@ -165,6 +183,7 @@ public class Gun : MonoBehaviour {
 			currentAmmo = magazine;
 			inventoryAmmo -= ammoLost;
 		}
+
 
 		ammoLost = 0f;
 

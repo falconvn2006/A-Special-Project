@@ -1,0 +1,8 @@
+newmtl MulLevel
+Kd 1 1 1
+d 1
+
+newmtl MulLevelWater
+Kd 0 0.6488547 1
+d 1
+

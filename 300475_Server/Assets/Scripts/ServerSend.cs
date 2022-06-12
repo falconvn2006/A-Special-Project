@@ -138,5 +138,31 @@ public class ServerSend
             SendTCPDataToAll(_packet);
         }
     }
+
+    public static void PlayerHealth(Player _player){
+        using(Packet _packet = new Packet((int)ServerPackets.playerHealth)){
+            _packet.Write(_player.id);
+            _packet.Write(_player.health);
+
+            SendTCPDataToAll(_packet);
+        }
+    }
+
+    public static void PlayerRespawned(Player _player){
+        using(Packet _packet = new Packet((int)ServerPackets.playerRespawned)){
+            _packet.Write(_player.id);
+
+            SendTCPDataToAll(_packet);
+        }
+    }
+
+    public static void PlayerKilled(Player _player, Player _killer){
+        using(Packet _packet = new Packet((int)ServerPackets.playerKilled)){
+            _packet.Write(_player.id);
+            _packet.Write(_killer.id);
+
+            SendTCPDataToAll(_packet);
+        }
+    }
     #endregion
 }

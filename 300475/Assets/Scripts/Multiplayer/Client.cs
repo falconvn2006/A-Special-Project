@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System.Net;
 using System.Net.Sockets;
 using System;
@@ -19,6 +20,8 @@ public class Client : MonoBehaviour
     private bool isConnected = false;
     private delegate void PacketHandler(Packet _packet);
     private static Dictionary<int, PacketHandler> packetHandlers;
+
+    public InputField ipInputField;
 
     private void Awake()
     {
@@ -48,6 +51,9 @@ public class Client : MonoBehaviour
     public void ConnectToServer()
     {
         InitializeClientData();
+
+        if(!string.IsNullOrEmpty(ipInputField.text))
+            ip = ipInputField.text;
 
         isConnected = true;
         tcp.Connect(); // Connect tcp, udp gets connected once tcp is done
@@ -302,8 +308,11 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.playerPosition, ClientHandle.PlayerPosition },
             { (int)ServerPackets.playerRotation, ClientHandle.PlayerRotation },
             { (int)ServerPackets.playerDisconnected, ClientHandle.PlayerDisconnect },
+            { (int)ServerPackets.playerHealth, ClientHandle.PlayerHealth },
+            { (int)ServerPackets.playerRespawned, ClientHandle.PlayerRespawned },
+            { (int)ServerPackets.playerKilled, ClientHandle.PlayerKilled }
         };
-        Debug.Log("Initialized packets.");
+        Debug.Log($"Initialized {packetHandlers.Count} packets.");
     }
 
     /// <summary>Disconnects from the server and stops all network traffic.</summary>

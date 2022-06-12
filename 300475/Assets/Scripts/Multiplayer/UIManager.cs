@@ -10,6 +10,9 @@ public class UIManager : MonoBehaviour
     public GameObject startMenu;
     public InputField usernameField;
 
+    public GameObject killfeed;
+    public GameObject feedPrefab;
+
     private void Awake()
     {
         if (instance == null)
@@ -29,5 +32,12 @@ public class UIManager : MonoBehaviour
         startMenu.SetActive(false);
         usernameField.interactable = false;
         Client.instance.ConnectToServer();
+    }
+
+    public static void AddFeed(string killer, string killed){
+        GameObject feed = Instantiate(instance.feedPrefab, instance.killfeed.transform);
+        feed.GetComponentInChildren<Text>().text = killer + " killed " + killed;
+
+        Destroy(feed, 5f);
     }
 }

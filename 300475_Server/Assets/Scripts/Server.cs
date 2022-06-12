@@ -34,7 +34,8 @@ public class Server
         udpListener = new UdpClient(Port);
         udpListener.BeginReceive(UDPReceiveCallback, null);
 
-        Debug.Log($"Server started on port {Port}.");
+        Debug.Log($"Server started on port {Port}. Server address is : {IPManager.GetIP(ADDRESSFAM.IPv4)}");
+        Debug.Log($"Max player : {MaxPlayers}");
     }
 
     /// <summary>Handles new TCP connections.</summary>
@@ -129,8 +130,10 @@ public class Server
             {
                 { (int)ClientPackets.welcomeReceived, ServerHandle.WelcomeReceived },
                 { (int)ClientPackets.playerMovement, ServerHandle.PlayerMovement },
+                { (int)ClientPackets.playerShoot, ServerHandle.PlayerShoot },
+                { (int)ClientPackets.weaponDamage, ServerHandle.WeaponDamage },
             };
-        Debug.Log("Initialized packets.");
+        Debug.Log($"Initialized {packetHandlers.Count} packets.");
     }
 
     /// <summary>Stop the server </summary>

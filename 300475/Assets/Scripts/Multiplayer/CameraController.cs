@@ -15,12 +15,15 @@ public class CameraController : MonoBehaviour
     {
         verticalRotation = transform.localEulerAngles.x;
         horizontalRotation = player.transform.eulerAngles.y;
+
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update()
     {
         Look();
         Debug.DrawRay(transform.position, transform.forward * 2, Color.red);
+        MouseLock();
     }
 
     private void Look()
@@ -35,5 +38,16 @@ public class CameraController : MonoBehaviour
 
         transform.localRotation = Quaternion.Euler(verticalRotation, 0f, 0f);
         player.transform.rotation = Quaternion.Euler(0f, horizontalRotation, 0f);
+    }
+
+    private void MouseLock(){
+        if(Input.GetKeyDown(KeyCode.I)){
+            if(Cursor.lockState == CursorLockMode.Locked){
+                Cursor.lockState = CursorLockMode.None;
+            }
+            else{
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+        }
     }
 }

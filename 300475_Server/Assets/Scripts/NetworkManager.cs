@@ -11,6 +11,8 @@ public class NetworkManager : MonoBehaviour
     public int maxPlayer = 50;
     public int port = 26950;
 
+    public GameObject spawnPoint;
+
     private void Awake()
     {
         if (instance == null)
@@ -38,6 +40,6 @@ public class NetworkManager : MonoBehaviour
 
     public Player InstantiatePlayer()
     {
-        return Instantiate(playerPrefab, new Vector3(0f, 0.5f, 0f), Quaternion.identity).GetComponent<Player>();
+        return Instantiate(playerPrefab, new Vector3(0f, 2f, 0f), Quaternion.identity).GetComponent<Player>();
     }
 }

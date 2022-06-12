@@ -50,4 +50,30 @@ public class ClientHandle : MonoBehaviour
         Destroy(GameManager.players[_id].gameObject);
         GameManager.players.Remove(_id);
     }
+
+    public static void PlayerHealth(Packet _packet){
+        int _id = _packet.ReadInt();
+        float _health = _packet.ReadFloat();
+
+        GameManager.players[_id].SetHealth(_health);
+    }
+
+    public static void PlayerRespawned(Packet _packet){
+        int _id = _packet.ReadInt();
+
+        GameManager.players[_id].Respawn();
+    }
+
+    public static void PlayerKilled(Packet _packet){
+        int _id = _packet.ReadInt();
+        int _killerId = _packet.ReadInt();
+
+        GameManager.players[_killerId].kills += 1;
+        GameManager.players[_id].deaths += 1;
+
+        GameManager.players[_id].SetKDText();
+        GameManager.players[_killerId].SetKDText();
+
+        UIManager.AddFeed(GameManager.players[_killerId].username, GameManager.players[_id].username);
+    }
 }

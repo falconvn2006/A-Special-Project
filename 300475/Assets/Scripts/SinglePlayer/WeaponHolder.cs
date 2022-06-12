@@ -5,6 +5,13 @@ using UnityEngine.UI;
 
 public class WeaponHolder : MonoBehaviour {
 
+	public enum GameModeType {
+		SinglePlayer,
+		Multiplayer
+	}
+
+	public GameModeType gameModeType;
+
 	public LayerMask weaponMask;
 	public Transform cameraTrans;
 
@@ -29,14 +36,18 @@ public class WeaponHolder : MonoBehaviour {
 
 	// Image
 	public Sprite grenadeIcon;
+	public Sprite lethalIcon;
 
 	public Text grenadeAmmountText;
+	public Text lethalAmmountText;
 
 	[Header("Other values")]
 	// Other info
 	public int grenadeAmount = 0;
+	public int lethalAmmount = 0;
 	public float throwForce = 40f;
 	public GameObject grenadePrefab;
+	public GameObject lethalPrefab;
 	public Transform grenadeThrowPos;
 
 	// weapon index
@@ -49,20 +60,45 @@ public class WeaponHolder : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		//defaultPos = transform;
 		defaultFOV = mainCam.fieldOfView;
+		if(gameModeType == GameModeType.Multiplayer)
+			defaultPos = transform.localPosition;
+			
 
-		if (grenadeAmount == 0) {
-			Color color = grenadeAmmountText.color;
-			color.a = 0.5f;
-			grenadeAmmountText.color = color;
-		} else {
-			Color color = grenadeAmmountText.color;
-			color.a = 1f;
-			grenadeAmmountText.color = color;
+		if(gameModeType == GameModeType.SinglePlayer){
+			//defaultPos = transform;
+
+			if (grenadeAmount == 0) {
+				Color color = grenadeAmmountText.color;
+				color.a = 0.5f;
+				grenadeAmmountText.color = color;
+			} else {
+				Color color = grenadeAmmountText.color;
+				color.a = 1f;
+				grenadeAmmountText.color = color;
+			}
+
+			if(lethalAmmount == 0) {
+				Color color = lethalAmmountText.color;
+				color.a = 0.5f;
+				lethalAmmountText.color = color;
+			} else {
+				Color color = lethalAmmountText.color;
+				color.a = 1f;
+				lethalAmmountText.color = color;
+			}
+
+			grenadeAmmountText.text = grenadeAmount.ToString ();
+			lethalAmmountText.text = lethalAmmount.ToString ();
+
 		}
 
-		grenadeAmmountText.text = grenadeAmount.ToString ();
+		if(gameModeType == GameModeType.Multiplayer){
+			crossHair = GameObject.Find ("CrossHair");
+			currentAmmoText = GameObject.Find ("CurrentAmmoText").GetComponent<Text> ();
+			invetoryAmmoText = GameObject.Find("InventoryAmmoText").GetComponent<Text>();
+			weaponIcon = GameObject.Find ("WeaponIcon").GetComponent<Image> ();
+		}
 
 		// Set the weapon before start
 		SelectWeapon ();
@@ -73,83 +109,114 @@ public class WeaponHolder : MonoBehaviour {
 		
 		int previousSelectedWeapon = selectedWeapon;
 
-		// Check for weapon on the ground
-		RaycastHit hit;
-		if (Physics.Raycast (cameraTrans.position, -transform.right, out hit, 10f, weaponMask)) {
-			if (hit.transform.GetComponent<Gun> () != null) {
-				pickupHolder.SetActive (true); // Set the ui
-				weaponNamePickupText.text = hit.transform.GetComponent<Gun> ().weaponName;
-				pickUpWeaponIcon.sprite = hit.transform.GetComponent<Gun> ().gunImage;
+		if(gameModeType == GameModeType.SinglePlayer){
+			// Check for weapon on the ground
+			RaycastHit hit;
+			if (Physics.Raycast (cameraTrans.position, -transform.right, out hit, 10f, weaponMask)) {
+				if (hit.transform.GetComponent<Gun> () != null) {
+					pickupHolder.SetActive (true); // Set the ui
+					weaponNamePickupText.text = hit.transform.GetComponent<Gun> ().weaponName;
+					pickUpWeaponIcon.sprite = hit.transform.GetComponent<Gun> ().gunImage;
 
-				if (Input.GetKeyDown (KeyCode.F)) {
-					// Set the transform to a varible
-					Transform pickTrans = hit.transform;
-					Vector3 pickPos = hit.transform.position;
+					if (Input.GetKeyDown (KeyCode.F)) {
+						// Set the transform to a varible
+						Transform pickTrans = hit.transform;
+						Vector3 pickPos = hit.transform.position;
 
-					// Get the layer
-					int picklayer = pickTrans.gameObject.layer;
-					int currentlayer = currentWeapon.gameObject.layer;
+						// Get the layer
+						int picklayer = pickTrans.gameObject.layer;
+						int currentlayer = currentWeapon.gameObject.layer;
 
-					// Turn on kinematic for the pickup weapon on the rigidbody
-					pickTrans.GetComponent<Rigidbody> ().isKinematic = true;
-					pickTrans.GetComponent<Collider> ().isTrigger = true; // Turn on trigger for the pickup weapon collider
-					pickTrans.SetParent (transform); // Set the parent to the weapon holder
-					pickTrans.position = currentWeapon.position; // Set the position
-					pickTrans.rotation = currentWeapon.rotation; // Set the rotation
-					currentWeapon.parent = null; // Detach the current weapon from the holder
-					currentWeapon.GetComponent<Rigidbody> ().isKinematic = false; // Turn off kinematic for the current weapon
-					currentWeapon.GetComponent<Collider>().isTrigger = false; // Turn off trigger for the current weapon collider
-					currentWeapon.position = pickPos;
-					pickTrans.GetComponent<Gun> ().enabled = true; // Turn on the weapon script for the pickup weapon
-					currentWeapon.GetComponent<Gun> ().enabled = false; // Turn off the current weapon script
+						// Turn on kinematic for the pickup weapon on the rigidbody
+						pickTrans.GetComponent<Rigidbody> ().isKinematic = true;
+						pickTrans.GetComponent<Collider> ().isTrigger = true; // Turn on trigger for the pickup weapon collider
+						pickTrans.SetParent (transform); // Set the parent to the weapon holder
+						pickTrans.position = currentWeapon.position; // Set the position
+						pickTrans.rotation = currentWeapon.rotation; // Set the rotation
+						currentWeapon.parent = null; // Detach the current weapon from the holder
+						currentWeapon.GetComponent<Rigidbody> ().isKinematic = false; // Turn off kinematic for the current weapon
+						currentWeapon.GetComponent<Collider>().isTrigger = false; // Turn off trigger for the current weapon collider
+						currentWeapon.position = pickPos;
+						pickTrans.GetComponent<Gun> ().enabled = true; // Turn on the weapon script for the pickup weapon
+						currentWeapon.GetComponent<Gun> ().enabled = false; // Turn off the current weapon script
 
-					pickTrans.gameObject.layer = currentlayer; // Set the layer
-					currentWeapon.gameObject.layer = picklayer; // Set the layer
+						pickTrans.gameObject.layer = currentlayer; // Set the layer
+						currentWeapon.gameObject.layer = picklayer; // Set the layer
 
-					weaponIcon.sprite = pickTrans.GetComponent<Gun> ().gunImage; // Set the icon
-					currentAmmoText.text = pickTrans.GetComponent<Gun> ().currentAmmo.ToString (); // Set the ammo
-					invetoryAmmoText.text = pickTrans.GetComponent<Gun> ().inventoryAmmo.ToString ();
+						weaponIcon.sprite = pickTrans.GetComponent<Gun> ().gunImage; // Set the icon
+						currentAmmoText.text = pickTrans.GetComponent<Gun> ().currentAmmo.ToString (); // Set the ammo
+						invetoryAmmoText.text = pickTrans.GetComponent<Gun> ().inventoryAmmo.ToString ();
 
-					currentWeapon = pickTrans; // Set the current weapon
-				}
-			}
-
-			if (hit.transform.GetComponent<Grenade> () != null) {
-				pickupHolder.SetActive (true);
-				weaponNamePickupText.text = "Grenade";
-
-				pickUpWeaponIcon.gameObject.SetActive (false);
-				pickUpWeaponIcon.sprite = grenadeIcon;
-				pickUpGrenadeIcon.gameObject.SetActive (true);
-
-				if (Input.GetKeyDown (KeyCode.F)) {
-					grenadeAmount++;
-					grenadeAmmountText.text = grenadeAmount.ToString ();
-
-					if (grenadeAmount == 0) {
-						Color color = grenadeAmmountText.color;
-						color.a = 0.5f;
-						grenadeAmmountText.color = color;
-					} else {
-						Color color = grenadeAmmountText.color;
-						color.a = 1f;
-						grenadeAmmountText.color = color;
+						currentWeapon = pickTrans; // Set the current weapon
 					}
-
-					Destroy (hit.transform.gameObject);
 				}
+
+				if (hit.transform.GetComponent<Grenade> () != null && hit.transform.GetComponent<Grenade>().type == Grenade.GrenadeType.Grenade) {
+					pickupHolder.SetActive (true);
+					weaponNamePickupText.text = "Grenade";
+
+					pickUpWeaponIcon.gameObject.SetActive (false);
+					pickUpWeaponIcon.sprite = grenadeIcon;
+					pickUpGrenadeIcon.gameObject.SetActive (true);
+					pickUpGrenadeIcon.sprite = grenadeIcon;
+
+					if (Input.GetKeyDown (KeyCode.F)) {
+						grenadeAmount += hit.transform.GetComponent<Grenade> ().amount;;
+						grenadeAmmountText.text = grenadeAmount.ToString ();
+
+						if (grenadeAmount == 0) {
+							Color color = grenadeAmmountText.color;
+							color.a = 0.5f;
+							grenadeAmmountText.color = color;
+						} else {
+							Color color = grenadeAmmountText.color;
+							color.a = 1f;
+							grenadeAmmountText.color = color;
+						}
+
+						Destroy (hit.transform.gameObject);
+					}
+				}
+				else if (hit.transform.GetComponent<Grenade> () != null && hit.transform.GetComponent<Grenade> ().type == Grenade.GrenadeType.Lethal) {
+						pickupHolder.SetActive (true);
+						weaponNamePickupText.text = "Smoke Grenade";
+
+						pickUpWeaponIcon.gameObject.SetActive (false);
+						pickUpWeaponIcon.sprite = grenadeIcon;
+						pickUpGrenadeIcon.gameObject.SetActive (true);
+						pickUpGrenadeIcon.sprite = lethalIcon;
+
+						if (Input.GetKeyDown (KeyCode.F)) {
+							lethalAmmount += hit.transform.GetComponent<Grenade> ().amount;
+							lethalAmmountText.text = lethalAmmount.ToString ();
+
+							if (lethalAmmount == 0) {
+								Color color = lethalAmmountText.color;
+								color.a = 0.5f;
+								lethalAmmountText.color = color;
+							} else {
+								Color color = lethalAmmountText.color;
+								color.a = 1f;
+								lethalAmmountText.color = color;
+							}
+							Destroy (hit.transform.gameObject);
+						}
+					}
+			}
+			else {
+				pickupHolder.SetActive (false); // Turn off the pickup icon if the ray didn't hit a weapon
+				pickUpWeaponIcon.gameObject.SetActive(true);
+				pickUpGrenadeIcon.gameObject.SetActive (false);
 			}
 
-		} else {
-			pickupHolder.SetActive (false); // Turn off the pickup icon if the ray didn't hit a weapon
-			pickUpWeaponIcon.gameObject.SetActive(true);
-			pickUpGrenadeIcon.gameObject.SetActive (false);
+
+			ThrowGrenade ();
+			ThrowLethal();
+
 		}
 
 		isAiming = Input.GetButton ("Fire2");
-
 		Aim ();
-		ThrowGrenade ();
 
 		if (Input.GetAxis ("Mouse ScrollWheel") > 0f) {
 			if (selectedWeapon <= 0)
@@ -177,7 +244,7 @@ public class WeaponHolder : MonoBehaviour {
 				transform.localPosition = Vector3.Lerp (transform.localPosition, aimDownSightPos, Time.deltaTime * 10f);
 
 			//transform.localPosition = aimDownSightPos;
-			if(mainCam.fieldOfView != aimFOV)
+			if(mainCam.fieldOfView != aimFOV && gameModeType == GameModeType.SinglePlayer)
 				//mainCam.fieldOfView = Mathf.Lerp (mainCam.fieldOfView, aimFOV, Time.deltaTime * 10f);
 				mainCam.fieldOfView = aimFOV;
 
@@ -186,7 +253,7 @@ public class WeaponHolder : MonoBehaviour {
 			if(transform.localPosition != defaultPos)
 				transform.localPosition = Vector3.Lerp (transform.localPosition, defaultPos, Time.deltaTime * 10f);
 
-			if(mainCam.fieldOfView != defaultFOV)
+			if(mainCam.fieldOfView != defaultFOV && gameModeType == GameModeType.SinglePlayer)
 				//mainCam.fieldOfView = Mathf.Lerp (mainCam.fieldOfView, defaultFOV, Time.deltaTime * 10f);
 				mainCam.fieldOfView = defaultFOV;
 
@@ -194,11 +261,12 @@ public class WeaponHolder : MonoBehaviour {
 			crossHair.SetActive (true);
 		}
 
-		if (transform.childCount <= 0){
-			weaponIcon.sprite = defaultImage;
-			currentAmmoText.text = "--";
-			invetoryAmmoText.text = "--";
-		}
+		if(gameModeType == GameModeType.SinglePlayer)
+			if (transform.childCount <= 0){
+				weaponIcon.sprite = defaultImage;	
+				currentAmmoText.text = "--";
+				invetoryAmmoText.text = "--";
+			}
 	}
 
 	void ThrowGrenade(){
@@ -227,6 +295,32 @@ public class WeaponHolder : MonoBehaviour {
 		}
 	}
 
+	void ThrowLethal(){
+		if (Input.GetKeyDown (KeyCode.Alpha4) && lethalAmmount > 0) {
+
+			int defaultLayer = LayerMask.NameToLayer ("Default");
+
+			GameObject lethal = Instantiate (lethalPrefab, grenadeThrowPos.position, Quaternion.identity);
+			lethal.layer = defaultLayer;
+			lethal.transform.parent = null;
+			Rigidbody rb = lethal.GetComponent<Rigidbody> ();
+			lethal.GetComponent<Grenade> ().isThrown = true;
+			rb.AddForce (grenadeThrowPos.forward * throwForce, ForceMode.VelocityChange);
+			lethalAmmount--;
+			lethalAmmountText.text = lethalAmmount.ToString ();
+
+			if(lethalAmmount == 0) {
+				Color color = lethalAmmountText.color;
+				color.a = 0.5f;
+				lethalAmmountText.color = color;
+			} else {
+				Color color = lethalAmmountText.color;
+				color.a = 1f;
+				lethalAmmountText.color = color;
+			}
+		}
+	}
+
 	void SelectWeapon(){
 
 		int i = 0;
@@ -235,10 +329,16 @@ public class WeaponHolder : MonoBehaviour {
 				weapon.gameObject.SetActive (true);
 				weaponIcon.sprite = weapon.GetComponent<Gun> ().gunImage;
 				weapon.GetComponent<Gun> ().enabled = true;
+
 				currentAmmoText.text = weapon.GetComponent<Gun> ().currentAmmo.ToString();
+				
 				invetoryAmmoText.text = weapon.GetComponent<Gun> ().inventoryAmmo.ToString ();
 
+				
 				RenewText (weapon.GetComponent<Gun> ());
+
+				if(gameModeType == GameModeType.Multiplayer)
+					ClientSend.WeaponDamage(weapon.GetComponent<Gun>().damage);				
 
 				currentWeapon = weapon;
 			} else {
