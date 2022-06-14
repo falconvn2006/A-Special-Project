@@ -40,4 +40,12 @@ public class ServerHandle
 
         Server.clients[_fromClient].player.damage = _damage;
     }
+
+    public static void MeleeAttack(int _fromClient, Packet _packet){
+        Vector3 _pos = _packet.ReadVector3();
+        Vector3 _scale = _packet.ReadVector3();
+        Quaternion _rotation = _packet.ReadQuaternion();
+
+        Server.clients[_fromClient].player.MeleeAttack(_pos, _scale, _rotation);
+    }
 }

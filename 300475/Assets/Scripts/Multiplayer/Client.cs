@@ -52,8 +52,12 @@ public class Client : MonoBehaviour
     {
         InitializeClientData();
 
-        if(!string.IsNullOrEmpty(ipInputField.text))
+        if(!string.IsNullOrEmpty(ipInputField.text)){
             ip = ipInputField.text;
+            
+        }
+        var addr = Dns.GetHostEntry(ip).AddressList[0];
+        Debug.Log(addr);
 
         isConnected = true;
         tcp.Connect(); // Connect tcp, udp gets connected once tcp is done

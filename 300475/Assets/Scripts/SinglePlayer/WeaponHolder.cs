@@ -110,10 +110,14 @@ public class WeaponHolder : MonoBehaviour {
 		int previousSelectedWeapon = selectedWeapon;
 
 		if(gameModeType == GameModeType.SinglePlayer){
+			// Picking up a weapon
 			// Check for weapon on the ground
 			RaycastHit hit;
 			if (Physics.Raycast (cameraTrans.position, -transform.right, out hit, 10f, weaponMask)) {
 				if (hit.transform.GetComponent<Gun> () != null) {
+					if(hit.transform.GetComponent<Gun>().isMelee)
+						return;
+
 					pickupHolder.SetActive (true); // Set the ui
 					weaponNamePickupText.text = hit.transform.GetComponent<Gun> ().weaponName;
 					pickUpWeaponIcon.sprite = hit.transform.GetComponent<Gun> ().gunImage;
@@ -233,6 +237,10 @@ public class WeaponHolder : MonoBehaviour {
 			selectedWeapon = 1;
 		}
 
+		if (Input.GetKeyDown (KeyCode.Alpha3) && transform.childCount >= 3) {
+			selectedWeapon = 2;
+		}
+
 		if (previousSelectedWeapon != selectedWeapon) {
 			SelectWeapon ();
 		}
@@ -326,6 +334,10 @@ public class WeaponHolder : MonoBehaviour {
 		int i = 0;
 		foreach (Transform weapon in transform) {
 			if (i == selectedWeapon) {
+				if(weapon.GetComponent<Gun>().isMelee)
+					// Change the weapon animator state to the idel state
+					weapon.GetComponent<Animator> ().Play("Base Layer.Idle");
+
 				weapon.gameObject.SetActive (true);
 				weaponIcon.sprite = weapon.GetComponent<Gun> ().gunImage;
 				weapon.GetComponent<Gun> ().enabled = true;
@@ -350,16 +362,19 @@ public class WeaponHolder : MonoBehaviour {
 	}
 
 	void RenewText(Gun gun){
-		if (gun.currentAmmo <= 0) {
-			currentAmmoText.color = Color.red;
-		} else {
+		if(gun.isMelee)
+			return;
+
+		if (gun.currentAmmo > 0) {
 			currentAmmoText.color = Color.white;
+		} else if (gun.currentAmmo <= 0) {
+			currentAmmoText.color = Color.red;
 		}
 
-		if (gun.inventoryAmmo <= 0) {
-			invetoryAmmoText.color = Color.red;
-		} else {
+		if (gun.inventoryAmmo > 0) {
 			invetoryAmmoText.color = Color.white;
+		} else if(gun.inventoryAmmo <= 0) {
+			invetoryAmmoText.color = Color.red;
 		}
 	}
 }

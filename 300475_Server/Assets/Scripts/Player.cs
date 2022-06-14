@@ -22,6 +22,8 @@ public class Player : MonoBehaviour
 
     private float yVelocity = 0;
 
+    public GameObject meleeObj;
+
     private bool[] inputs;
 
     void Start(){
@@ -111,6 +113,12 @@ public class Player : MonoBehaviour
                 _hit.collider.GetComponent<Player>().TakeDamage(this, damage);
             }
         }
+    }
+
+    public void MeleeAttack(Vector3 _pos, Vector3 _scale, Quaternion _rotation){
+        meleeObj.transform.position = _pos;
+        meleeObj.transform.rotation = _rotation;
+        meleeObj.transform.localScale = _scale;
     }
 
     public void TakeDamage(Player _player, float _damage){

@@ -55,8 +55,11 @@ MonoBehaviour:
   gravity: -9.81
   moveSpeed: 5
   jumpSpeed: 5
+  damage: 0
   sprintMultiplier: 2
   crouchMultiplier: 0.5
+  spherePrefab: {fileID: 2217767717140816555, guid: ae1a32466cd0842468e53bd06a809192,
+    type: 3}
 --- !u!143 &8750990653779411363
 CharacterController:
   m_ObjectHideFlags: 0
