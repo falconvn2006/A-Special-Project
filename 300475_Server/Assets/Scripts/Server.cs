@@ -133,6 +133,7 @@ public class Server
                 { (int)ClientPackets.playerShoot, ServerHandle.PlayerShoot },
                 { (int)ClientPackets.weaponDamage, ServerHandle.WeaponDamage },
                 { (int)ClientPackets.meleeAttack, ServerHandle.MeleeAttack },
+                { (int)ClientPackets.playerThrowItem, ServerHandle.PlayerThrowItem },
             };
         Debug.Log($"Initialized {packetHandlers.Count} packets.");
     }

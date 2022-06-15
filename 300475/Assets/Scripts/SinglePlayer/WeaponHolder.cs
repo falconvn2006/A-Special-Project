@@ -95,9 +95,9 @@ public class WeaponHolder : MonoBehaviour {
 
 		if(gameModeType == GameModeType.Multiplayer){
 			crossHair = GameObject.Find ("CrossHair");
-			currentAmmoText = GameObject.Find ("CurrentAmmoText").GetComponent<Text> ();
+			currentAmmoText = GameObject.Find("CurrentAmmoText").GetComponent<Text> ();
 			invetoryAmmoText = GameObject.Find("InventoryAmmoText").GetComponent<Text>();
-			weaponIcon = GameObject.Find ("WeaponIcon").GetComponent<Image> ();
+			weaponIcon = GameObject.Find("WeaponIcon").GetComponent<Image> ();
 		}
 
 		// Set the weapon before start
@@ -214,10 +214,11 @@ public class WeaponHolder : MonoBehaviour {
 			}
 
 
-			ThrowGrenade ();
-			ThrowLethal();
 
+			ThrowLethal();
 		}
+
+		ThrowGrenade ();
 
 		isAiming = Input.GetButton ("Fire2");
 		Aim ();
@@ -278,7 +279,7 @@ public class WeaponHolder : MonoBehaviour {
 	}
 
 	void ThrowGrenade(){
-		if (Input.GetKeyDown (KeyCode.G) && grenadeAmount > 0) {
+		if (Input.GetKeyDown (KeyCode.G) && grenadeAmount > 0 && gameModeType == GameModeType.SinglePlayer) {
 
 			int defaultLayer = LayerMask.NameToLayer ("Default");
 
@@ -300,6 +301,10 @@ public class WeaponHolder : MonoBehaviour {
 				color.a = 1f;
 				grenadeAmmountText.color = color;
 			}
+
+		}
+		if(Input.GetKeyDown(KeyCode.G) && gameModeType == GameModeType.Multiplayer){
+			ClientSend.PlayerThrowItem(grenadeThrowPos.forward);
 		}
 	}
 
@@ -375,6 +380,12 @@ public class WeaponHolder : MonoBehaviour {
 			invetoryAmmoText.color = Color.white;
 		} else if(gun.inventoryAmmo <= 0) {
 			invetoryAmmoText.color = Color.red;
+		}
+	}
+
+	public void ResetWeapon(){
+		foreach(Transform weapon in transform){
+			weapon.GetComponent<Gun>().ResetAmmo();
 		}
 	}
 }

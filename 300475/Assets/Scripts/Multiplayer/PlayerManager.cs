@@ -18,10 +18,14 @@ public class PlayerManager : MonoBehaviour
     private Text deathsText;
     private Text healthText;
 
+    private Text grenadeText;
+    private Text lethalText;
+
     private void Awake(){
         killsText = GameObject.Find("KillText").GetComponent<Text>();
         deathsText = GameObject.Find("DeathText").GetComponent<Text>();
         healthText = GameObject.Find("HealthText").GetComponent<Text>();
+        grenadeText = GameObject.Find("GrenadeText").GetComponent<Text>();
     }
 
     public void Initialize(int _id, string _username){
@@ -48,12 +52,19 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    public void SetLethal(int _grenade){
+        if(this.gameObject.tag == "LocalPlayer"){
+            grenadeText.text = _grenade.ToString();
+        }
+    }
+
     public void Die(){
         model.enabled = false;
     }
 
     public void Respawn(){
         model.enabled = true;
+        GetComponentInChildren<WeaponHolder>().ResetWeapon();
         SetHealth(maxHealth);
     }
 }

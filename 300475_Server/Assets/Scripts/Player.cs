@@ -13,6 +13,8 @@ public class Player : MonoBehaviour
     public float gravity = -9.81f;
     public float moveSpeed = 5f;
     public float jumpSpeed = 5f;
+    public float throwForce = 600f;
+    public int itemAmmount = 4;
 
     public float damage;
 
@@ -108,6 +110,9 @@ public class Player : MonoBehaviour
     }
 
     public void Shoot(Vector3 _viewDirection){
+        if(health <= 0)
+            return;
+
         if(Physics.Raycast(shootOrigin.position, _viewDirection, out RaycastHit _hit, 25f)){
             if(_hit.collider.CompareTag("Player")){
                 _hit.collider.GetComponent<Player>().TakeDamage(this, damage);
@@ -119,6 +124,18 @@ public class Player : MonoBehaviour
         meleeObj.transform.position = _pos;
         meleeObj.transform.rotation = _rotation;
         meleeObj.transform.localScale = _scale;
+    }
+
+    public void ThrowItem(Vector3 _viewDirection){
+        if(health <= 0)
+            return;
+
+        if(itemAmmount > 0){
+            itemAmmount--;
+
+            NetworkManager.instance.InstantiateProjectile(shootOrigin).Initialize(_viewDirection, throwForce, id);
+            ServerSend.LethalsAmount(id, itemAmmount);
+        }
     }
 
     public void TakeDamage(Player _player, float _damage){
@@ -142,6 +159,7 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(3f);
 
         health = maxHealth;
+        itemAmmount = 4;
         controller.enabled = true;
         ServerSend.PlayerRespawned(this);
     }

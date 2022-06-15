@@ -14,7 +14,14 @@ public enum ServerPackets
     playerDisconnected,
     playerHealth,
     playerRespawned,
-    playerKilled
+    playerKilled,
+    // Grenade
+    projectileSpawned,
+    projectilePosition,
+    projectileExploded,
+    // Status
+    lethalsAmount
+
 }
 
 /// <summary>Sent from client to server.</summary>
@@ -24,7 +31,8 @@ public enum ClientPackets
     playerMovement,
     playerShoot,
     weaponDamage,
-    meleeAttack
+    meleeAttack,
+    playerThrowItem
 }
 
 public class Packet : IDisposable

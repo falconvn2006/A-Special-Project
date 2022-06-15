@@ -76,4 +76,34 @@ public class ClientHandle : MonoBehaviour
 
         UIManager.AddFeed(GameManager.players[_killerId].username, GameManager.players[_id].username);
     }
+
+    public static void SpawnProjectile(Packet _packet){
+        int _id = _packet.ReadInt();
+        Vector3 _position = _packet.ReadVector3();
+        int _thrownByPlayer = _packet.ReadInt();
+
+        GameManager.instance.SpawnProjectile(_id, _position);
+        GameManager.players[_thrownByPlayer].GetComponentInChildren<WeaponHolder>().grenadeAmount--;
+    }
+
+    public static void ProjectilePosition(Packet _packet){
+        int _id = _packet.ReadInt();
+        Vector3 _position = _packet.ReadVector3();
+
+        GameManager.projectiles[_id].transform.position = _position;
+    }
+
+    public static void ProjectileExplode(Packet _packet){
+        int _id = _packet.ReadInt();
+        Vector3 _position = _packet.ReadVector3();
+
+        GameManager.projectiles[_id].Explode(_position);
+    }
+
+    public static void LethalsAmount(Packet _packet){
+        int _id = _packet.ReadInt();
+        int _grenade = _packet.ReadInt();
+
+        GameManager.players[_id].SetLethal(_grenade);
+    }
 }

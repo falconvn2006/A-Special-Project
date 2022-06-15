@@ -56,6 +56,8 @@ public class Gun : MonoBehaviour {
 	public bool readyToShoot;
 	public float timeBetweenShoot;
 
+	float defaultInventoryAmmo;
+
 	void Awake(){
 		/*
 		currentAmmoText.text = currentAmmo.ToString();
@@ -95,6 +97,8 @@ public class Gun : MonoBehaviour {
 		if (bulletPrefab == null && !isMelee) {
 			Debug.LogError ("Missing Prefab");
 		}
+
+		defaultInventoryAmmo = inventoryAmmo;
 	}
 	
 	// Update is called once per frame
@@ -249,6 +253,11 @@ public class Gun : MonoBehaviour {
 				
 			}
 		}
+	}
+
+	public void ResetAmmo(){
+		currentAmmo = magazine;
+		inventoryAmmo = defaultInventoryAmmo;
 	}
 
 	void OnDrawGizmosSelected()

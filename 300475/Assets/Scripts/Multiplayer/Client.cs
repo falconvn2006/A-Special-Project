@@ -314,7 +314,11 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.playerDisconnected, ClientHandle.PlayerDisconnect },
             { (int)ServerPackets.playerHealth, ClientHandle.PlayerHealth },
             { (int)ServerPackets.playerRespawned, ClientHandle.PlayerRespawned },
-            { (int)ServerPackets.playerKilled, ClientHandle.PlayerKilled }
+            { (int)ServerPackets.playerKilled, ClientHandle.PlayerKilled },
+            { (int)ServerPackets.projectileSpawned, ClientHandle.SpawnProjectile },
+            { (int)ServerPackets.projectilePosition, ClientHandle.ProjectilePosition },
+            { (int)ServerPackets.projectileExploded, ClientHandle.ProjectileExplode },
+            { (int)ServerPackets.lethalsAmount, ClientHandle.LethalsAmount }
         };
         Debug.Log($"Initialized {packetHandlers.Count} packets.");
     }
