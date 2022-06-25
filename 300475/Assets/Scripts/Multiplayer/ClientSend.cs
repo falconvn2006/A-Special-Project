@@ -10,6 +10,7 @@ public class ClientSend : MonoBehaviour
     {
         _packet.WriteLength();
         Client.instance.tcp.SendData(_packet);
+        //FindObjectOfType<Client>().tcp.SendData(_packet);
     }
 
     /// <summary>Sends a packet to the server via UDP.</summary>
@@ -27,7 +28,7 @@ public class ClientSend : MonoBehaviour
         using (Packet _packet = new Packet((int)ClientPackets.welcomeReceived))
         {
             _packet.Write(Client.instance.myId);
-            _packet.Write(UIManager.instance.usernameField.text);
+            _packet.Write(UIManager.instance.username);
 
             SendTCPData(_packet);
         }
@@ -79,6 +80,14 @@ public class ClientSend : MonoBehaviour
     public static void PlayerThrowItem(Vector3 _facing){
         using(Packet _packet = new Packet((int)ClientPackets.playerThrowItem)){
             _packet.Write(_facing);
+
+            SendTCPData(_packet);
+        }
+    }
+
+    public static void ClientDisconnect(int _idCase){
+        using(Packet _packet = new Packet((int)ClientPackets.clientDisconnect)){
+            _packet.Write(_idCase);
 
             SendTCPData(_packet);
         }

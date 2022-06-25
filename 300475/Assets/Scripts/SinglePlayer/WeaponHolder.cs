@@ -49,6 +49,7 @@ public class WeaponHolder : MonoBehaviour {
 	public GameObject grenadePrefab;
 	public GameObject lethalPrefab;
 	public Transform grenadeThrowPos;
+	public GameObject meleeObj;
 
 	// weapon index
 	public int selectedWeapon = 0;
@@ -57,6 +58,7 @@ public class WeaponHolder : MonoBehaviour {
 	private Transform currentWeapon;
 
 	private float defaultFOV;
+	private Vector3 defaultMeleePos;
 
 	// Use this for initialization
 	void Start () {
@@ -67,6 +69,7 @@ public class WeaponHolder : MonoBehaviour {
 
 		if(gameModeType == GameModeType.SinglePlayer){
 			//defaultPos = transform;
+			defaultMeleePos = meleeObj.transform.localPosition;
 
 			if (grenadeAmount == 0) {
 				Color color = grenadeAmmountText.color;
@@ -108,6 +111,10 @@ public class WeaponHolder : MonoBehaviour {
 	void Update () {
 		
 		int previousSelectedWeapon = selectedWeapon;
+
+		if(gameModeType == GameModeType.Multiplayer)
+			if(UIManager.instance.isPaused)
+				return;
 
 		if(gameModeType == GameModeType.SinglePlayer){
 			// Picking up a weapon
@@ -213,7 +220,7 @@ public class WeaponHolder : MonoBehaviour {
 				pickUpGrenadeIcon.gameObject.SetActive (false);
 			}
 
-
+			Melee();
 
 			ThrowLethal();
 		}
@@ -387,5 +394,23 @@ public class WeaponHolder : MonoBehaviour {
 		foreach(Transform weapon in transform){
 			weapon.GetComponent<Gun>().ResetAmmo();
 		}
+	}
+
+	void Melee(){
+		if(Input.GetKeyDown(KeyCode.V)){
+			StartCoroutine(StartMelee());	
+		}
+	}
+
+	IEnumerator StartMelee(){
+		currentWeapon.gameObject.SetActive(false);
+		meleeObj.transform.localPosition = defaultMeleePos;
+		meleeObj.SetActive(true);
+
+		meleeObj.GetComponent<Melee>().AttackRef();
+
+		yield return new WaitForSeconds(1f);
+		currentWeapon.gameObject.SetActive(true);
+		meleeObj.SetActive(false);
 	}
 }

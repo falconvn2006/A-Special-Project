@@ -21,6 +21,9 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
+        if(UIManager.instance.isPaused)
+            return;
+
         Look();
         Debug.DrawRay(transform.position, transform.forward * 2, Color.red);
         MouseLock();

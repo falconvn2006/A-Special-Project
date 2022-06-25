@@ -57,6 +57,9 @@ public class Gun : MonoBehaviour {
 	public float timeBetweenShoot;
 
 	float defaultInventoryAmmo;
+    
+    public AudioSource shootSound;
+    public AudioSource reloadSound;
 
 	void Awake(){
 		/*
@@ -103,6 +106,10 @@ public class Gun : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if(gameModeType == GameModeType.Multiplayer)
+			if(UIManager.instance.isPaused)
+				return;
+
 		if(allowHoldDown) isShooting = Input.GetButton ("Fire1");
 		else isShooting = Input.GetButtonDown ("Fire1"); 
 
@@ -160,6 +167,9 @@ public class Gun : MonoBehaviour {
 		}
 
 		readyToShoot = false;
+        
+        if(shootSound != null)
+            shootSound.Play();
 
 		Ray ray = fpsCam.ViewportPointToRay (new Vector3 (0.5f, 0.5f, 0));
 		RaycastHit _hit;
@@ -210,6 +220,9 @@ public class Gun : MonoBehaviour {
 
 	IEnumerator Reload(){
 		Debug.Log ("Reloading...");
+        if(reloadSound != null)
+            reloadSound.Play();
+        
 		Vector3 rotation = transform.localEulerAngles;
 		isReloading = true;
 

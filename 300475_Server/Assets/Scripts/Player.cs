@@ -153,6 +153,7 @@ public class Player : MonoBehaviour
         }
 
         ServerSend.PlayerHealth(this);
+        ServerSend.PlayerHit(_player.id, _player.id);
     }
 
     public IEnumerator Respawn(){

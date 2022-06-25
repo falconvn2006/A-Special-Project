@@ -6,6 +6,7 @@ public class ProjectileManager : MonoBehaviour
 {
     public int id;
     public GameObject explosionPrefab;
+    public AudioSource explodeSound;
 
     public void Initialize(int _id){
         id = _id;
@@ -15,6 +16,7 @@ public class ProjectileManager : MonoBehaviour
         transform.position = _position;
         GameObject effect = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
         effect.transform.parent = transform;
-        Destroy(gameObject, 0.5f);
+        explodeSound.Play();
+        Destroy(gameObject, 1f);
     }
 }

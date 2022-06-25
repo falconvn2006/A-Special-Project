@@ -58,6 +58,12 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    public void SetHitMarker(){
+        if(this.gameObject.tag == "LocalPlayer"){
+            UIManager.instance.HitMarker();
+        }
+    }
+
     public void Die(){
         model.enabled = false;
     }

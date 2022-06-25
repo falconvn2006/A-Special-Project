@@ -24,6 +24,8 @@ public class GameManager : MonoBehaviour
             Debug.Log("Instance already exists, destroying object!");
             Destroy(this);
         }
+        
+        DontDestroyOnLoad(this.gameObject);
     }
 
     /// <summary>Spawns a player.</summary>

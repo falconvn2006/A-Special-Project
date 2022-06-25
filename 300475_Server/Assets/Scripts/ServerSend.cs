@@ -201,5 +201,13 @@ public class ServerSend
             SendTCPData(_toClient, _packet);
         }
     }
+
+    public static void PlayerHit(int _toClient, int _id){
+        using(Packet _packet = new Packet((int)ServerPackets.playerHit)){
+            _packet.Write(_id);
+
+            SendUDPData(_toClient, _packet);
+        }
+    }
     #endregion
 }

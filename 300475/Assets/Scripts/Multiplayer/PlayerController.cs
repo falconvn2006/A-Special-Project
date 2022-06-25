@@ -32,6 +32,9 @@ public class PlayerController : MonoBehaviour
 				staminaTimer += Time.deltaTime;
 		}
 
+        if(UIManager.instance.isPaused)
+            return;
+
         SendInputToServer();
     }
 

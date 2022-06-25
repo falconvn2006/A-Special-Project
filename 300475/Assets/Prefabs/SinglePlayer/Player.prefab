@@ -207,6 +207,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecc979cd59bc05f43ad31e7a40fbcb16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameModeType: 0
   weaponName: X19
   damage: 3
   magazine: 10
@@ -224,6 +225,9 @@ MonoBehaviour:
   gunIcon: {fileID: 0}
   gunImage: {fileID: 21300000, guid: 18a21f3fd98d13c438f106dc68175242, type: 3}
   useInvoke: 1
+  isMelee: 0
+  scale: {x: 1, y: 1, z: 1}
+  anim: {fileID: 0}
   spread: 0
   bulletPerTap: 1
   allowHoldDown: 0
@@ -364,6 +368,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecc979cd59bc05f43ad31e7a40fbcb16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameModeType: 0
   weaponName: AK-47
   damage: 10
   magazine: 30
@@ -381,6 +386,9 @@ MonoBehaviour:
   gunIcon: {fileID: 0}
   gunImage: {fileID: 21300000, guid: 57dbdbfcd74917a41aea5fe4d7f40c10, type: 3}
   useInvoke: 1
+  isMelee: 0
+  scale: {x: 1, y: 1, z: 1}
+  anim: {fileID: 0}
   spread: 0.3
   bulletPerTap: 2
   allowHoldDown: 1
@@ -597,7 +605,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerHeight: 1
   speed: 6
-  gravity: -9.81
+  gravity: -13.32
   groundDistance: 0.4
   vaultDistance: 1
   jumpHeight: 1
@@ -748,6 +756,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c78026daf1e80a44882d115736f6d676, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameModeType: 0
   weaponMask:
     serializedVersion: 2
     m_Bits: 1536

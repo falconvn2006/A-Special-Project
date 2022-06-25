@@ -53,4 +53,10 @@ public class ServerHandle
         Vector3 _throwDirection = _packet.ReadVector3();
         Server.clients[_fromClient].player.ThrowItem(_throwDirection);
     }
+
+    public static void ClientDisconnect(int _fromClient, Packet _packet){
+        int _idCase = _packet.ReadInt();
+
+        Server.clients[_fromClient].Disconnect();
+    }
 }

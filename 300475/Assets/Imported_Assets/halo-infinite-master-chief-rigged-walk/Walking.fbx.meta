@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: dea9eb80e58edee41af90822ff9cc700
+guid: fcd0fbbfe46e92849b1690c74b9fa0a5
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
@@ -63,56 +63,56 @@ ModelImporter:
     100114: lowerarm_twist_02_r
     100116: M_MED_Jupiter
     100118: M_MED_Jupiter_Helmet
-    100120: //RootNode
-    100122: middle_01_l
-    100124: middle_01_r
-    100126: middle_02_l
-    100128: middle_02_r
-    100130: middle_03_l
-    100132: middle_03_r
-    100134: middle_metacarpal_l
-    100136: middle_metacarpal_r
-    100138: neck_01
-    100140: neck_02
-    100142: pelvis
-    100144: pinky_01_l
-    100146: pinky_01_r
-    100148: pinky_02_l
-    100150: pinky_02_r
-    100152: pinky_03_l
-    100154: pinky_03_r
-    100156: pinky_metacarpal_l
-    100158: pinky_metacarpal_r
-    100160: ring_01_l
-    100162: ring_01_r
-    100164: ring_02_l
-    100166: ring_02_r
-    100168: ring_03_l
-    100170: ring_03_r
-    100172: ring_metacarpal_l
-    100174: ring_metacarpal_r
-    100176: root
-    100178: spine_01
-    100180: spine_02
-    100182: spine_03
-    100184: spine_04
-    100186: spine_05
-    100188: thigh_l
-    100190: thigh_r
-    100192: thigh_twist_01_l
-    100194: thigh_twist_01_r
-    100196: thumb_01_l
-    100198: thumb_01_r
-    100200: thumb_02_l
-    100202: thumb_02_r
-    100204: thumb_03_l
-    100206: thumb_03_r
-    100208: upperarm_l
-    100210: upperarm_r
-    100212: upperarm_twist_01_l
-    100214: upperarm_twist_01_r
-    100216: upperarm_twist_02_l
-    100218: upperarm_twist_02_r
+    100120: middle_01_l
+    100122: middle_01_r
+    100124: middle_02_l
+    100126: middle_02_r
+    100128: middle_03_l
+    100130: middle_03_r
+    100132: middle_metacarpal_l
+    100134: middle_metacarpal_r
+    100136: neck_01
+    100138: neck_02
+    100140: pelvis
+    100142: pinky_01_l
+    100144: pinky_01_r
+    100146: pinky_02_l
+    100148: pinky_02_r
+    100150: pinky_03_l
+    100152: pinky_03_r
+    100154: pinky_metacarpal_l
+    100156: pinky_metacarpal_r
+    100158: ring_01_l
+    100160: ring_01_r
+    100162: ring_02_l
+    100164: ring_02_r
+    100166: ring_03_l
+    100168: ring_03_r
+    100170: ring_metacarpal_l
+    100172: ring_metacarpal_r
+    100174: root
+    100176: spine_01
+    100178: spine_02
+    100180: spine_03
+    100182: spine_04
+    100184: spine_05
+    100186: thigh_l
+    100188: thigh_r
+    100190: thigh_twist_01_l
+    100192: thigh_twist_01_r
+    100194: thumb_01_l
+    100196: thumb_01_r
+    100198: thumb_02_l
+    100200: thumb_02_r
+    100202: thumb_03_l
+    100204: thumb_03_r
+    100206: upperarm_l
+    100208: upperarm_r
+    100210: upperarm_twist_01_l
+    100212: upperarm_twist_01_r
+    100214: upperarm_twist_02_l
+    100216: upperarm_twist_02_r
+    100218: //RootNode
     100220: weapon_l
     100222: weapon_r
     400000: attach
@@ -175,80 +175,72 @@ ModelImporter:
     400114: lowerarm_twist_02_r
     400116: M_MED_Jupiter
     400118: M_MED_Jupiter_Helmet
-    400120: //RootNode
-    400122: middle_01_l
-    400124: middle_01_r
-    400126: middle_02_l
-    400128: middle_02_r
-    400130: middle_03_l
-    400132: middle_03_r
-    400134: middle_metacarpal_l
-    400136: middle_metacarpal_r
-    400138: neck_01
-    400140: neck_02
-    400142: pelvis
-    400144: pinky_01_l
-    400146: pinky_01_r
-    400148: pinky_02_l
-    400150: pinky_02_r
-    400152: pinky_03_l
-    400154: pinky_03_r
-    400156: pinky_metacarpal_l
-    400158: pinky_metacarpal_r
-    400160: ring_01_l
-    400162: ring_01_r
-    400164: ring_02_l
-    400166: ring_02_r
-    400168: ring_03_l
-    400170: ring_03_r
-    400172: ring_metacarpal_l
-    400174: ring_metacarpal_r
-    400176: root
-    400178: spine_01
-    400180: spine_02
-    400182: spine_03
-    400184: spine_04
-    400186: spine_05
-    400188: thigh_l
-    400190: thigh_r
-    400192: thigh_twist_01_l
-    400194: thigh_twist_01_r
-    400196: thumb_01_l
-    400198: thumb_01_r
-    400200: thumb_02_l
-    400202: thumb_02_r
-    400204: thumb_03_l
-    400206: thumb_03_r
-    400208: upperarm_l
-    400210: upperarm_r
-    400212: upperarm_twist_01_l
-    400214: upperarm_twist_01_r
-    400216: upperarm_twist_02_l
-    400218: upperarm_twist_02_r
+    400120: middle_01_l
+    400122: middle_01_r
+    400124: middle_02_l
+    400126: middle_02_r
+    400128: middle_03_l
+    400130: middle_03_r
+    400132: middle_metacarpal_l
+    400134: middle_metacarpal_r
+    400136: neck_01
+    400138: neck_02
+    400140: pelvis
+    400142: pinky_01_l
+    400144: pinky_01_r
+    400146: pinky_02_l
+    400148: pinky_02_r
+    400150: pinky_03_l
+    400152: pinky_03_r
+    400154: pinky_metacarpal_l
+    400156: pinky_metacarpal_r
+    400158: ring_01_l
+    400160: ring_01_r
+    400162: ring_02_l
+    400164: ring_02_r
+    400166: ring_03_l
+    400168: ring_03_r
+    400170: ring_metacarpal_l
+    400172: ring_metacarpal_r
+    400174: root
+    400176: spine_01
+    400178: spine_02
+    400180: spine_03
+    400182: spine_04
+    400184: spine_05
+    400186: thigh_l
+    400188: thigh_r
+    400190: thigh_twist_01_l
+    400192: thigh_twist_01_r
+    400194: thumb_01_l
+    400196: thumb_01_r
+    400198: thumb_02_l
+    400200: thumb_02_r
+    400202: thumb_03_l
+    400204: thumb_03_r
+    400206: upperarm_l
+    400208: upperarm_r
+    400210: upperarm_twist_01_l
+    400212: upperarm_twist_01_r
+    400214: upperarm_twist_02_l
+    400216: upperarm_twist_02_r
+    400218: //RootNode
     400220: weapon_l
     400222: weapon_r
+    2100000: Jupiter_Body
+    2100002: Jupiter_FaceAcc
     4300000: M_MED_Jupiter
     4300002: M_MED_Jupiter_Helmet
     7400000: mixamo.com
     9500000: //RootNode
     13700000: M_MED_Jupiter
     13700002: M_MED_Jupiter_Helmet
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Jupiter_Body
-    second: {fileID: 2100000, guid: cc4c8456876672542a7f334c584792a1, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Jupiter_FaceAcc
-    second: {fileID: 2100000, guid: 75a757fdc3673f34c8569275613955f7, type: 2}
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
     materialSearch: 1
-    materialLocation: 0
+    materialLocation: 1
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
@@ -278,10 +270,10 @@ ModelImporter:
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
-    importVisibility: 0
+    importVisibility: 1
     importBlendShapes: 1
-    importCameras: 0
-    importLights: 0
+    importCameras: 1
+    importLights: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
@@ -289,7 +281,7 @@ ModelImporter:
     keepQuads: 0
     weldVertices: 1
     preserveHierarchy: 0
-    indexFormat: 1
+    indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
@@ -301,11 +293,11 @@ ModelImporter:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
-    normalCalculationMode: 0
-    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
-  importAnimation: 0
+  importAnimation: 1
   copyAvatar: 0
   humanDescription:
     serializedVersion: 2

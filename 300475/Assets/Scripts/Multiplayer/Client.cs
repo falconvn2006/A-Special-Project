@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using System.Net;
 using System.Net.Sockets;
 using System;
+using UnityEngine.SceneManagement;
 
 public class Client : MonoBehaviour
 {
@@ -16,8 +17,10 @@ public class Client : MonoBehaviour
     public int myId = 0;
     public TCP tcp;
     public UDP udp;
+    public string gameScene;
+    public string menuScene;
 
-    private bool isConnected = false;
+    public bool isConnected = false;
     private delegate void PacketHandler(Packet _packet);
     private static Dictionary<int, PacketHandler> packetHandlers;
 
@@ -34,6 +37,8 @@ public class Client : MonoBehaviour
             Debug.Log("Instance already exists, destroying object!");
             Destroy(this);
         }
+        
+        DontDestroyOnLoad(this.gameObject);
     }
 
     private void Start()
@@ -44,18 +49,25 @@ public class Client : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        Disconnect(); // Disconnect when the game is closed
+        Disconnect(2); // Disconnect when the game is closed
     }
 
     /// <summary>Attempts to connect to the server.</summary>
     public void ConnectToServer()
     {
-        InitializeClientData();
-
         if(!string.IsNullOrEmpty(ipInputField.text)){
             ip = ipInputField.text;
             
         }
+        
+        if(GameManager.instance != null){
+            Destroy(GameManager.instance.gameObject);
+        }
+        
+        SceneManager.LoadScene(gameScene);
+    
+        InitializeClientData();
+        
         var addr = Dns.GetHostEntry(ip).AddressList[0];
         Debug.Log(addr);
 
@@ -126,7 +138,7 @@ public class Client : MonoBehaviour
                 int _byteLength = stream.EndRead(_result);
                 if (_byteLength <= 0)
                 {
-                    instance.Disconnect();
+                    instance.Disconnect(0);
                     return;
                 }
 
@@ -198,7 +210,7 @@ public class Client : MonoBehaviour
         /// <summary>Disconnects from the server and cleans up the TCP connection.</summary>
         private void Disconnect()
         {
-            instance.Disconnect();
+            instance.Disconnect(0);
 
             stream = null;
             receivedData = null;
@@ -260,7 +272,7 @@ public class Client : MonoBehaviour
 
                 if (_data.Length < 4)
                 {
-                    instance.Disconnect();
+                    instance.Disconnect(0);
                     return;
                 }
 
@@ -295,7 +307,7 @@ public class Client : MonoBehaviour
         /// <summary>Disconnects from the server and cleans up the UDP connection.</summary>
         private void Disconnect()
         {
-            instance.Disconnect();
+            instance.Disconnect(0);
 
             endPoint = null;
             socket = null;
@@ -318,21 +330,46 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.projectileSpawned, ClientHandle.SpawnProjectile },
             { (int)ServerPackets.projectilePosition, ClientHandle.ProjectilePosition },
             { (int)ServerPackets.projectileExploded, ClientHandle.ProjectileExplode },
-            { (int)ServerPackets.lethalsAmount, ClientHandle.LethalsAmount }
+            { (int)ServerPackets.lethalsAmount, ClientHandle.LethalsAmount },
+            { (int)ServerPackets.playerHit, ClientHandle.PlayerHit },
         };
         Debug.Log($"Initialized {packetHandlers.Count} packets.");
     }
 
-    /// <summary>Disconnects from the server and stops all network traffic.</summary>
-    private void Disconnect()
+    /// <summary>Disconnects from the server and stops all network traffic. With some cases</summary>
+    /// <param name="_id">The case for disconnecting.</param>
+    public void Disconnect(int id)
     {
-        if (isConnected)
+        // User disconnects not the server
+        if (isConnected && id == 0)
         {
             isConnected = false;
             tcp.socket.Close();
             udp.socket.Close();
 
             Debug.Log("Disconnected from server.");
+            ClientSend.ClientDisconnect(id);
+            // Reset the current scene
+            SceneManager.LoadScene(menuScene);
+        }
+
+        // Server shuts down
+        if(isConnected && id == 1){
+            isConnected = false;
+            tcp.socket.Close();
+            udp.socket.Close();
+
+            Debug.Log("Server is shutting down.");
+            UIManager.ReEnableStartMenu();
+        }
+
+        // User quit the application
+        if(isConnected && id == 2){
+            isConnected = false;
+            tcp.socket.Close();
+            udp.socket.Close();
+
+            Debug.Log("User has quit the application.");
         }
     }
 }

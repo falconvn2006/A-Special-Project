@@ -47,8 +47,8 @@ public class ClientHandle : MonoBehaviour
     public static void PlayerDisconnect(Packet _packet){
         int _id = _packet.ReadInt();
 
-        Destroy(GameManager.players[_id].gameObject);
         GameManager.players.Remove(_id);
+        Destroy(GameManager.players[_id].gameObject);
     }
 
     public static void PlayerHealth(Packet _packet){
@@ -83,7 +83,6 @@ public class ClientHandle : MonoBehaviour
         int _thrownByPlayer = _packet.ReadInt();
 
         GameManager.instance.SpawnProjectile(_id, _position);
-        GameManager.players[_thrownByPlayer].GetComponentInChildren<WeaponHolder>().grenadeAmount--;
     }
 
     public static void ProjectilePosition(Packet _packet){
@@ -105,5 +104,11 @@ public class ClientHandle : MonoBehaviour
         int _grenade = _packet.ReadInt();
 
         GameManager.players[_id].SetLethal(_grenade);
+    }
+
+    public static void PlayerHit(Packet _packet){
+        int _id = _packet.ReadInt();
+
+        GameManager.players[_id].SetHitMarker();
     }
 }
