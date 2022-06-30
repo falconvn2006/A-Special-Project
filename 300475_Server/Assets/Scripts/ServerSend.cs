@@ -209,5 +209,22 @@ public class ServerSend
             SendUDPData(_toClient, _packet);
         }
     }
+
+    public static void PingReceived(int _toClient, int _id){
+        using(Packet _packet = new Packet((int)ServerPackets.pingReceived)){
+            _packet.Write(_id);
+
+            SendUDPData(_toClient, _packet);
+        }
+    }
+
+    public static void ChatMessageToClient(int _senderId, string _message){
+        using(Packet _packet = new Packet((int)ServerPackets.chatMessageToClient)){
+            _packet.Write(_senderId);
+            _packet.Write(_message);
+
+            SendUDPDataToAll(_packet);
+        }
+    }
     #endregion
 }

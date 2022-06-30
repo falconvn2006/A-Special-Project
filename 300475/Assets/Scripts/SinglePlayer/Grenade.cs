@@ -20,6 +20,7 @@ public class Grenade : MonoBehaviour {
 	public GameObject smokeEffect;
 	public float radius = 5f;
 	public float force = 1000f;
+	public AudioSource grenadeSound;
 
 	public float smokeLifeTime = 5f;
 
@@ -58,6 +59,10 @@ public class Grenade : MonoBehaviour {
 					rb.AddExplosionForce(force, transform.position, radius);
 				}
 			}
+
+			if(grenadeSound != null)
+				grenadeSound.Play();
+
 			Destroy(gameObject, 0.5f);
 		}
 		else {

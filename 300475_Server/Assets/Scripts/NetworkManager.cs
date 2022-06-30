@@ -12,7 +12,7 @@ public class NetworkManager : MonoBehaviour
     public int maxPlayer = 50;
     public int port = 26950;
 
-    public GameObject spawnPoint;
+    public GameObject[] spawnPoints;
 
     private void Awake()
     {
@@ -41,7 +41,7 @@ public class NetworkManager : MonoBehaviour
 
     public Player InstantiatePlayer()
     {
-        return Instantiate(playerPrefab, new Vector3(0f, 2f, 0f), Quaternion.identity).GetComponent<Player>();
+        return Instantiate(playerPrefab, spawnPoints[Mathf.RoundToInt(Random.Range(0, spawnPoints.Length))].transform.position, Quaternion.identity).GetComponent<Player>();
     }
 
     public Projectile InstantiateProjectile(Transform _shootOrigin)

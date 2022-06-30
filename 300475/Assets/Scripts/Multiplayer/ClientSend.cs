@@ -92,5 +92,21 @@ public class ClientSend : MonoBehaviour
             SendTCPData(_packet);
         }
     }
+
+    public static void Ping(int _senderId){
+        using(Packet _packet = new Packet((int)ClientPackets.ping)){
+            _packet.Write(_senderId);
+
+            SendUDPData(_packet);
+        }
+    }
+
+    public static void ChatMessage(string _message){
+        using(Packet _packet = new Packet((int)ClientPackets.chatMessage)){
+            _packet.Write(_message);
+
+            SendUDPData(_packet);
+        }
+    }
     #endregion
 }

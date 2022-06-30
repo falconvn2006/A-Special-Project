@@ -18,14 +18,31 @@ public class PlayerManager : MonoBehaviour
     private Text deathsText;
     private Text healthText;
 
+    private Text pingText;
+
     private Text grenadeText;
     private Text lethalText;
+
+    private float currentTime = 0f;
 
     private void Awake(){
         killsText = GameObject.Find("KillText").GetComponent<Text>();
         deathsText = GameObject.Find("DeathText").GetComponent<Text>();
         healthText = GameObject.Find("HealthText").GetComponent<Text>();
         grenadeText = GameObject.Find("GrenadeText").GetComponent<Text>();
+        pingText = GameObject.Find("PingText").GetComponent<Text>();
+    }
+
+    private void Update(){
+        currentTime += Mathf.Round(Time.deltaTime * 1000);
+        ClientSend.Ping(id);
+
+        if(this.gameObject.tag == "LocalPlayer")
+            pingText.text = currentTime + " ms";
+    }
+
+    public void ResetPing(){
+        currentTime = 0f;
     }
 
     public void Initialize(int _id, string _username){
@@ -71,6 +88,7 @@ public class PlayerManager : MonoBehaviour
     public void Respawn(){
         model.enabled = true;
         GetComponentInChildren<WeaponHolder>().ResetWeapon();
+        grenadeText.text = "4";
         SetHealth(maxHealth);
     }
 }

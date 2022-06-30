@@ -18,6 +18,13 @@ public class PlayerController : MonoBehaviour
 
     private float staminaTimer = 0.0f;
 
+    private GameObject staminaSlider;
+
+    private void Start(){
+        staminaSlider = GameObject.Find("StaminaSlider");
+        staminaSlider.SetActive(false);
+    }
+
     private void Update(){
     }
 
@@ -27,12 +34,15 @@ public class PlayerController : MonoBehaviour
 		{
 			if (staminaTimer >= staminaTimeToRegen) {
 				stamina = Mathf.Clamp (stamina + (staminaIncreasePerFrame * Time.deltaTime), 0.0f, maxStamina);
+                staminaSlider.GetComponent<Slider>().value = stamina;
 			}
 			else
 				staminaTimer += Time.deltaTime;
 		}
+        else if(stamina == maxStamina)
+            StartCoroutine(DisableStamina());
 
-        if(UIManager.instance.isPaused)
+        if(UIManager.instance.isPaused || ChatManager.isOn)
             return;
 
         SendInputToServer();
@@ -55,6 +65,8 @@ public class PlayerController : MonoBehaviour
         if(Input.GetKey(KeyCode.LeftShift) && Input.GetAxisRaw("Vertical") > 0 && stamina > 0){
             _inputs[5] = true;
             stamina = Mathf.Clamp (stamina - (staminaDecreasePerFrame * Time.deltaTime), 0.0f, maxStamina);
+            staminaSlider.GetComponent<Slider>().value = stamina;
+            staminaSlider.SetActive(true);
             staminaTimer = 0.0f;
         }
         
@@ -62,5 +74,13 @@ public class PlayerController : MonoBehaviour
             _inputs[5] = false;
 
         ClientSend.PlayerMovement(_inputs);
+    }
+
+    IEnumerator DisableStamina(){
+        yield return new WaitForSeconds(4f);
+
+        staminaSlider.SetActive(false);
+
+        yield break;
     }
 }

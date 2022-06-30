@@ -134,7 +134,9 @@ public class Server
                 { (int)ClientPackets.weaponDamage, ServerHandle.WeaponDamage },
                 { (int)ClientPackets.meleeAttack, ServerHandle.MeleeAttack },
                 { (int)ClientPackets.playerThrowItem, ServerHandle.PlayerThrowItem },
-                { (int)ClientPackets.clientDisconnect, ServerHandle.ClientDisconnect }
+                { (int)ClientPackets.clientDisconnect, ServerHandle.ClientDisconnect },
+                { (int)ClientPackets.ping, ServerHandle.Ping },
+                { (int)ClientPackets.chatMessage, ServerHandle.ChatMessage }
             };
         Debug.Log($"Initialized {packetHandlers.Count} packets.");
     }

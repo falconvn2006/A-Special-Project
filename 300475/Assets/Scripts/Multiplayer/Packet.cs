@@ -21,7 +21,10 @@ public enum ServerPackets
     projectileExploded,
     // Status
     lethalsAmount,
-    playerHit
+    playerHit,
+    pingReceived,
+    // Chat
+    chatMessageToAll
 }
 
 /// <summary>Sent from client to server.</summary>
@@ -33,7 +36,10 @@ public enum ClientPackets
     weaponDamage,
     meleeAttack,
     playerThrowItem,
-    clientDisconnect
+    clientDisconnect,
+    ping,
+    // Chat
+    chatMessage
 }
 
 public class Packet : IDisposable

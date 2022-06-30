@@ -21,7 +21,7 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
-        if(UIManager.instance.isPaused)
+        if(UIManager.instance.isPaused || ChatManager.isOn)
             return;
 
         Look();

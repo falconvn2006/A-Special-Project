@@ -76,9 +76,12 @@ public class Gun : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		if(gameModeType == GameModeType.Multiplayer)
+		if(gameModeType == GameModeType.Multiplayer){
 			if(GetComponentInParent<PlayerManager>().health <= 0)
 				return;
+
+			defaultInventoryAmmo = inventoryAmmo;
+		}
 
 		if(!isMelee)
 			currentAmmo = magazine;
@@ -106,9 +109,12 @@ public class Gun : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(gameModeType == GameModeType.Multiplayer)
-			if(UIManager.instance.isPaused)
+		if(gameModeType == GameModeType.Multiplayer){
+			if(UIManager.instance.isPaused || ChatManager.isOn)
 				return;
+			if(GetComponentInParent<PlayerManager>().health <= 0f)
+				return;
+		}
 
 		if(allowHoldDown) isShooting = Input.GetButton ("Fire1");
 		else isShooting = Input.GetButtonDown ("Fire1"); 

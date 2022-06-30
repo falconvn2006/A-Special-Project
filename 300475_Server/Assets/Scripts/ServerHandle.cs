@@ -59,4 +59,16 @@ public class ServerHandle
 
         Server.clients[_fromClient].Disconnect();
     }
+
+    public static void Ping(int _fromClient, Packet _packet){
+        int _senderId = _packet.ReadInt();
+
+        ServerSend.PingReceived(_fromClient, _senderId);
+    }
+
+    public static void ChatMessage(int _fromClient, Packet _packet){
+        string _message = _packet.ReadString();
+
+        ServerSend.ChatMessageToClient(_fromClient, _message);
+    }
 }

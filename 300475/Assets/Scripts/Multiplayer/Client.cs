@@ -332,6 +332,8 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.projectileExploded, ClientHandle.ProjectileExplode },
             { (int)ServerPackets.lethalsAmount, ClientHandle.LethalsAmount },
             { (int)ServerPackets.playerHit, ClientHandle.PlayerHit },
+            { (int)ServerPackets.pingReceived, ClientHandle.PingReceived },
+            { (int)ServerPackets.chatMessageToAll, ClientHandle.ChatMessageReceived}
         };
         Debug.Log($"Initialized {packetHandlers.Count} packets.");
     }

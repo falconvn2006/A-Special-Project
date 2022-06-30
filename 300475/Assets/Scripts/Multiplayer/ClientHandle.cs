@@ -111,4 +111,17 @@ public class ClientHandle : MonoBehaviour
 
         GameManager.players[_id].SetHitMarker();
     }
+
+    public static void PingReceived(Packet _packet){
+        int _id = _packet.ReadInt();
+
+        GameManager.players[_id].ResetPing();
+    }
+
+    public static void ChatMessageReceived(Packet _packet){
+        int _senderId = _packet.ReadInt();
+        string _message = _packet.ReadString();
+
+        ChatManager.instance.AddMessage(_senderId, _message);
+    }
 }
